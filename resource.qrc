@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/PainAnalyzer">
+        <file>PainAnalyzerContent/Head.qml</file>
+        <file>PainAnalyzerContent/App.qml</file>
+        <file>meshes/mesh_0_mesh3.mesh</file>
+    </qresource>
+</RCC>

@@ -1,40 +1,44 @@
 import QtQuick
-import QtQuick.Controls
-import PainAnalyzer
+import QtQuick.Window
+import QtQuick3D
 
 Window {
-    width: Constants.width
-    height: Constants.height
-
+    width: 800
+    height: 600
     visible: true
+    title: "3D Head Model Example"
 
-    SwipeView {
-        id: swipeView
-        anchors.top: tabBar.bottom
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        currentIndex: tabBar.currentIndex
+    View3D {
+        anchors.fill: parent
 
-        Screen01 {
+        // 💡 Свет
+        DirectionalLight {
+            eulerRotation.x: -45
+            eulerRotation.y: 45
+            brightness: 2.0
         }
 
-        Screen02 {
+        // 🎥 Камера
+        PerspectiveCamera {
+            id: camera
+            position: Qt.vector3d(0, 0, 600)
+            eulerRotation.x: -10
         }
-    }
-
-    TabBar {
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-
-        TabButton {
-            text: qsTr("Page 1")
+        // Head{
+        //
+        // }
+        // 🧠 Модель (наш .glb файл)
+        Head{
+            scale: Qt.vector3d(100, 100, 100)
+            eulerRotation: Qt.vector3d(-90, 0, 0)
         }
-        TabButton {
-            text: qsTr("Page 2")
-        }
+        // Model {
+        //     id: headModel
+        //     source: "qrc:/PainAnalyzer/models/head.glb"   // путь к твоему файлу
+        //     scale: Qt.vector3d(1, 1, 1)
+        //     materials: DefaultMaterial {
+        //         lighting: DefaultMaterial.FragmentLighting
+        //     }
+        // }
     }
 }
