@@ -2,6 +2,12 @@
     <qresource prefix="/PainAnalyzer">
         <file>PainAnalyzerContent/Head.qml</file>
         <file>PainAnalyzerContent/App.qml</file>
-        <file>meshes/mesh_0_mesh3.mesh</file>
+        <file>models/meshes/mesh_0_001_mesh.mesh</file>
+        <file>models/meshes/mesh_0_002_mesh.mesh</file>
+        <file>models/meshes/mesh_0_003_mesh.mesh</file>
+        <file>models/meshes/mesh_0_004_mesh.mesh</file>
+        <file>models/meshes/mesh_0_005_mesh.mesh</file>
+        <file>models/meshes/mesh_0_006_mesh.mesh</file>
+        <file>models/meshes/mesh_0_007_mesh.mesh</file>
     </qresource>
 </RCC>
