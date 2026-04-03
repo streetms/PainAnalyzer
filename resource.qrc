@@ -2,6 +2,7 @@
     <qresource prefix="/PainAnalyzer">
         <file>PainAnalyzerContent/Head.qml</file>
         <file>PainAnalyzerContent/App.qml</file>
+        <file>PainAnalyzerContent/Scene3D.qml</file>
         <file>models/meshes/mesh_0_001_mesh.mesh</file>
         <file>models/meshes/mesh_0_002_mesh.mesh</file>
         <file>models/meshes/mesh_0_003_mesh.mesh</file>
