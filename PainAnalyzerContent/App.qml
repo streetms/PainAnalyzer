@@ -291,7 +291,11 @@ ApplicationWindow {
         }
         Button {
             text: selectionMode ?  "Навигация" : "Выделение"
-            onClicked: selectionMode = !selectionMode
+            onClicked:{
+                selectionMode = !selectionMode
+                view3d.contour = []
+                view3d.updatePath()
+            }
         }
     }
 }
