@@ -295,6 +295,8 @@ ApplicationWindow {
                 selectionMode = !selectionMode
                 view3d.contour = []
                 view3d.updatePath()
+                view3d.clearSelection()
+                // view3d.selectInsideContour()
             }
         }
     }
