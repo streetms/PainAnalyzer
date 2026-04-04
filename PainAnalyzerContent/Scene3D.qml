@@ -17,22 +17,13 @@ View3D {
         eulerRotation.x: -45; eulerRotation.y: 45
     }
 
-    Head {
+    HeadModel {
         id: head
         position: Qt.vector3d(0, 0, 0)
         scale: Qt.vector3d(100, 100, 100)
         eulerRotation: Qt.vector3d(-90, 0, 0)
     }
     // Подсветка
-    PrincipledMaterial {
-        id: highlightMaterial
-        baseColor: "orange"
-        roughness: 0.25
-        metalness: 0.0
-        emissiveFactor: Qt.vector3d(0.6, 0.35, 0.0)
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
 
     // Контур
     property var contour: []
@@ -64,8 +55,8 @@ View3D {
     // Включаем pickers на мешах (важно!)
     Component.onCompleted: {
         Qt.callLater(() => {
-            console.log("meshes in app:", head.meshesList ? head.meshesList.length : "null")
-        })
+                         console.log("meshes in app:", head.meshesList ? head.meshesList.length : "null")
+                     })
     }
 
 
@@ -76,7 +67,7 @@ View3D {
             const xi = polygon[i].x, yi = polygon[i].y
             const xj = polygon[j].x, yj = polygon[j].y
             const intersect = ((yi > point.y) !== (yj > point.y)) &&
-                (point.x < (xj - xi) * (point.y - yi) / (yj - yi + 1e-9) + xi)
+                            (point.x < (xj - xi) * (point.y - yi) / (yj - yi + 1e-9) + xi)
             if (intersect) inside = !inside
         }
         return inside
@@ -145,7 +136,7 @@ View3D {
                 console.log("pick: null at", x, y)
             else
                 console.log("pick:", (r.objectHit ? r.objectHit.objectName : "no objectHit"),
-                    " at", x, y)
+                            " at", x, y)
         }
 
         if (!r || !r.objectHit)
@@ -195,5 +186,20 @@ View3D {
         color: "#66000000"
         border.color: "#44ffffff"
         border.width: 1
+    }
+
+    Item {
+        id: __materialLibrary__
+
+        PrincipledMaterial {
+            id: highlightMaterial
+            objectName: "highlightMaterial"
+            baseColor: "orange"
+            roughness: 0.25
+            metalness: 0.0
+            emissiveFactor: Qt.vector3d(0.6, 0.35, 0.0)
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
     }
 }

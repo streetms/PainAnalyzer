@@ -11,7 +11,9 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
     //QQmlContext *context = engine.rootContext();
-    const QUrl url("qrc:/qt/qml/PainAnalyzerContent/App.qml");
+     qDebug() << "Qt runtime version:" << qVersion();
+
+    const QUrl url("qrc:/qt/qml/PainAnalyzerContent/Screen01.qml");
     // QObject::connect(
     //         &engine, &QQmlApplicationEngine::objectCreated, &app,
     //         [url](QObject *obj, const QUrl &objUrl) {

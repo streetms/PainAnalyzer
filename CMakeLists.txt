@@ -28,6 +28,7 @@ qt_add_resources(PainAnalyzer "app_resources"
         resource.qrc
 )
 
+
 target_link_libraries(PainAnalyzer PRIVATE
         Qt6::Core
         Qt6::Gui

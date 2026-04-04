@@ -5,79 +5,8 @@ Node {
     id: root
 
     // --- БАЗОВЫЙ серый материал (по умолчанию на всей голове) ---
-    PrincipledMaterial {
-        id: baseGrayMaterial
-        objectName: "baseGray"
-        baseColor: "#808080"
-        roughness: 0.65
-        metalness: 0.0
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
 
     // --- Цветные материалы (для выделения) ---
-    PrincipledMaterial {
-        id: yellow_material
-        objectName: "yellow"
-        baseColor: "#ffcccb02"
-        roughness: 0.5
-        metalness: 0.0
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
-    PrincipledMaterial {
-        id: orange_material
-        objectName: "orange"
-        baseColor: "#ffcc5901"
-        roughness: 0.5
-        metalness: 0.0
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
-    PrincipledMaterial {
-        id: purple_material
-        objectName: "purple"
-        baseColor: "#ffcc004c"
-        roughness: 0.5
-        metalness: 0.0
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
-    PrincipledMaterial {
-        id: principledMaterial
-        objectName: "metal"
-        metalness: 1
-        roughness: 1
-        alphaMode: PrincipledMaterial.Opaque
-        cullMode: PrincipledMaterial.NoCulling
-    }
-    PrincipledMaterial {
-        id: green_material
-        objectName: "green"
-        baseColor: "#ff03cc00"
-        roughness: 0.5
-        metalness: 0.0
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
-    PrincipledMaterial {
-        id: blue_material
-        objectName: "blue"
-        baseColor: "#ff0171cc"
-        roughness: 0.5
-        metalness: 0.0
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
-    PrincipledMaterial {
-        id: red_material
-        objectName: "red"
-        baseColor: "#ffcc0002"
-        roughness: 0.5
-        metalness: 0.0
-        cullMode: PrincipledMaterial.NoCulling
-        alphaMode: PrincipledMaterial.Opaque
-    }
 
     Node {
         id: node_1
@@ -142,19 +71,102 @@ Node {
         }
     }
 
+    Node {
+        id: __materialLibrary__
+
+        PrincipledMaterial {
+            id: baseGrayMaterial
+            objectName: "baseGray"
+            baseColor: "#808080"
+            roughness: 0.65
+            metalness: 0.0
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
+
+        PrincipledMaterial {
+            id: yellow_material
+            objectName: "yellow"
+            baseColor: "#ffcccb02"
+            roughness: 0.5
+            metalness: 0.0
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
+
+        PrincipledMaterial {
+            id: orange_material
+            objectName: "orange"
+            baseColor: "#ffcc5901"
+            roughness: 0.5
+            metalness: 0.0
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
+
+        PrincipledMaterial {
+            id: purple_material
+            objectName: "purple"
+            baseColor: "#ffcc004c"
+            roughness: 0.5
+            metalness: 0.0
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
+
+        PrincipledMaterial {
+            id: principledMaterial
+            objectName: "metal"
+            metalness: 1
+            roughness: 1
+            alphaMode: PrincipledMaterial.Opaque
+            cullMode: PrincipledMaterial.NoCulling
+        }
+
+        PrincipledMaterial {
+            id: green_material
+            objectName: "green"
+            baseColor: "#ff03cc00"
+            roughness: 0.5
+            metalness: 0.0
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
+
+        PrincipledMaterial {
+            id: blue_material
+            objectName: "blue"
+            baseColor: "#ff0171cc"
+            roughness: 0.5
+            metalness: 0.0
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
+
+        PrincipledMaterial {
+            id: red_material
+            objectName: "red"
+            baseColor: "#ffcc0002"
+            roughness: 0.5
+            metalness: 0.0
+            cullMode: PrincipledMaterial.NoCulling
+            alphaMode: PrincipledMaterial.Opaque
+        }
+    }
+
     // Список мешей
     property var meshesList: []
 
     // Карта: meshName -> материал "цвета выделения"
     property var highlightMaterialByMeshName: ({
-        "Mesh_0": yellow_material,
-        "Mesh_0.001": orange_material,
-        "Mesh_0.002": purple_material,
-        "Mesh_0.003": principledMaterial,
-        "Mesh_0.004": green_material,
-        "Mesh_0.005": blue_material,
-        "Mesh_0.006": red_material
-    })
+                                                   "Mesh_0": yellow_material,
+                                                   "Mesh_0.001": orange_material,
+                                                   "Mesh_0.002": purple_material,
+                                                   "Mesh_0.003": principledMaterial,
+                                                   "Mesh_0.004": green_material,
+                                                   "Mesh_0.005": blue_material,
+                                                   "Mesh_0.006": red_material
+                                               })
 
     function meshByName(name) {
         if (!meshesList) return null
