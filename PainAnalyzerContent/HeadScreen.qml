@@ -3,10 +3,9 @@ import QtQuick3D
 import QtQuick.Shapes
 import QtQuick.Controls
 
-ApplicationWindow {
-    width: 800
-    height: 600
-    visible: true
+Page {
+    Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
+    Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
     title: "Head Lasso Picker (Qt 6.11)"
     property bool selectionMode: true
     Rectangle {
