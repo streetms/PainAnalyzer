@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 Page {
     id: page
+    Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
+    Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
     SelectionDialog {
         id: dlg
         options: [
@@ -16,7 +18,8 @@ Page {
 
         onConfirmed: (keys) => {
             console.log(keys)
-            close()
+            dlg.close()
+            Qt.callLater(() => page.StackView.view.pop())
         }
     }
 }

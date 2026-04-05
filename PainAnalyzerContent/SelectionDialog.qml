@@ -3,9 +3,10 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Popup {
+
     id: root
     modal: true
-    focus: true
+    // focus: true
     dim: true
     // ВАЖНО: центрируем относительно parent (обычно Overlay)
     function recenter() {

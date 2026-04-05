@@ -5,31 +5,42 @@ ApplicationWindow {
     width: 800
     height: 600
     visible: true
+    id :win
+
     Component.onCompleted: {
-        console.log("Initial item:", nav.initialItem)
-        console.log("Current item:", nav.currentItem)
+        console.log("Initial item:", stack.initialItem)
+        console.log("Current item:", stack.currentItem)
+        win.requestActivate()      // важно для desktop
+        win.raise()
+        win.forceActiveFocus()
     }
     StackView {
-        id: nav
+        id: stack
         anchors.fill: parent
         initialItem: Screen01{}   // где ваш Repeater
+    }
+    function goBack(){
+        console.log(" [UI] ",stack.depth)
+        if (stack.depth > 1) {
+            stack.pop()
+        }
     }
     property var sel
     function openScreen(key) {
         switch (key) {
-            case "type":     nav.push(Qt.resolvedUrl("TypeScreen.qml")); break
-            case "head":     nav.push(Qt.resolvedUrl("HeadScreen.qml")); break
-            case "triggers":  nav.push(Qt.resolvedUrl("TriggerScreen.qml")); break
-            case "symptoms": nav.push(Qt.resolvedUrl("SymptomsScreen.qml")); break
-            case "auras":    nav.push(Qt.resolvedUrl("AurasScreen.qml")); break
-            case "drugs":    nav.push(Qt.resolvedUrl("DrugsScreen.qml")); break
+            case "type":     stack.push(Qt.resolvedUrl("TypeScreen.qml")); break
+            case "head":     stack.push(Qt.resolvedUrl("HeadScreen.qml")); break
+            case "triggers": stack.push(Qt.resolvedUrl ("TriggerScreen.qml")); break
+            case "symptoms": stack.push(Qt.resolvedUrl("SymptomsScreen.qml")); break
+            case "auras":    stack.push(Qt.resolvedUrl("AurasScreen.qml")); break
+            case "drugs":    stack.push(Qt.resolvedUrl("DrugsScreen.qml")); break
             default: console.log("Unknown screen key:", key)
         }
     }
 
     // ловим сигнал от текущего экрана (MainScreen)
     Connections {
-        target: nav.currentItem
+        target: stack.currentItem
         function onOpenRequested(key) { openScreen(key) }
     }
 }

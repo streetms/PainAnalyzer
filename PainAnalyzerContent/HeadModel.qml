@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick3D
 
 Node {
+
     id: root
 
     // --- БАЗОВЫЙ серый материал (по умолчанию на всей голове) ---
