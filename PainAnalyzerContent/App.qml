@@ -6,7 +6,6 @@ ApplicationWindow {
     height: 600
     visible: true
     id :win
-
     Component.onCompleted: {
         console.log("Initial item:", stack.initialItem)
         console.log("Current item:", stack.currentItem)

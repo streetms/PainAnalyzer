@@ -14,6 +14,8 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 qt_add_executable(PainAnalyzer
         src/main.cpp
+        src/record.cpp
+        src/record.h
 )
 
 

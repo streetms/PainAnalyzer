@@ -8,18 +8,12 @@ Page {
     SelectionDialog {
         id: dlg
         options: [
-            {key: "a", text: "Слезоточение на стороне боли"},
-            {key: "b", text: "Краснота глаза"},
-            {key: "c", text: "Сужение глазной щели"},
-            {key: "d", text: "Отек лица"},
-            {key: "e", text: "Выделения из носа"},
-            {key: "f", text: "Неприязнь к свету/звуку"}
+            {text: "Слезоточение на стороне боли"},
+            {text: "Краснота глаза"},
+            {text: "Сужение глазной щели"},
+            {text: "Отек лица"},
+            {text: "Выделения из носа"},
+            {text: "Неприязнь к свету/звуку"}
         ]
-
-        onConfirmed: (keys) => {
-            console.log(keys)
-            dlg.close()
-            Qt.callLater(() => page.StackView.view.pop())
-        }
     }
 }

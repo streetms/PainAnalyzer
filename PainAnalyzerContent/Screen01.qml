@@ -4,7 +4,7 @@ import QtQuick.Layouts
 Page {
     property bool selectionMode: true
     id: page
-    anchors.fill: parent
+    // anchors.fill: parent
     padding: 0
 
     property int painLevel: Math.round(painSlider.value) // 0..10
@@ -16,6 +16,7 @@ Page {
     signal openRequested(string key)
 
     background: Rectangle {
+
         color: "#EFEFF2"
     }
 
@@ -37,8 +38,8 @@ Page {
                 width: parent.width - 36
                 height: 172
                 radius: 18
-                color: "#E6E1EA"
-                border.color: "#00000010"
+                 color: "#E6E1EA"
+                 border.color: "#00000010"
                 border.width: 1
                 anchors.horizontalCenter: parent.horizontalCenter
 

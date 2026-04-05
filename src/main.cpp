@@ -5,22 +5,15 @@
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QQmlContext>
-
+#include "record.h"
 
 int main(int argc, char *argv[]) {
+    Record record;
     QGuiApplication app(argc, argv);
+    QQuickStyle::setStyle("Material");
     QQmlApplicationEngine engine;
-    //QQmlContext *context = engine.rootContext();
-     qDebug() << "Qt runtime version:" << qVersion();
-
+    engine.rootContext()->setContextProperty("currentRecord", &record);
     const QUrl url("qrc:/qt/qml/PainAnalyzerContent/Screen01.qml");
-    // QObject::connect(
-    //         &engine, &QQmlApplicationEngine::objectCreated, &app,
-    //         [url](QObject *obj, const QUrl &objUrl) {
-    //             if (!obj && url == objUrl)
-    //                 QCoreApplication::exit(-1);
-    //         },
-    //         Qt::QueuedConnection);
 
     engine.load(QStringLiteral("qrc:/PainAnalyzer/PainAnalyzerContent/App.qml"));
 

@@ -17,16 +17,16 @@ Page {
         parent: Overlay.overlay   // важно: не page.Window.overlay
 
         options: [
-            {key: "a", text: "прикосновение к лицу"},
-            {key: "b", text: "чистка зубов"},
-            {key: "c", text: "Разговор"},
-            {key: "d", text: "Ветер"},
-            {key: "e", text: "Широкое открывание рта"},
-            {key: "f", text: "Прием пищи/жевание"}
+            {text: "прикосновение к лицу"},
+            {text: "чистка зубов"},
+            {text: "Разговор"},
+            {text: "Ветер"},
+            {text: "Широкое открывание рта"},
+            {text: "Прием пищи/жевание"}
         ]
 
-        onConfirmed: (keys) => {
-            console.log(keys)
+        onConfirmed: (text) => {
+            currentRecord.setTriggers(text)
             dlg.close()
             Qt.callLater(() => page.StackView.view.pop())
         }

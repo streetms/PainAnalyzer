@@ -33,17 +33,17 @@ Popup {
     // [{ key: "...", text: "..." }, ...]
     property var options: []
 
-    property var selectedKeys: []
-    signal confirmed(var selectedKeys)
+    property var selectedText: []
+    signal confirmed(var selectedText)
 
-    function isSelected(key) { return selectedKeys.indexOf(key) !== -1 }
-    function toggle(key) {
-        const i = selectedKeys.indexOf(key)
-        if (i === -1) selectedKeys = selectedKeys.concat([key])
+    function isSelected(text) { return selectedText.indexOf(text) !== -1 }
+    function toggle(text) {
+        const i = selectedText.indexOf(text)
+        if (i === -1) selectedText = selectedText.concat([text])
         else {
-            const copy = selectedKeys.slice(0)
+            const copy = selectedText.slice(0)
             copy.splice(i, 1)
-            selectedKeys = copy
+            selectedText = copy
         }
     }
 
@@ -88,9 +88,9 @@ Popup {
                             Layout.minimumWidth: 0
 
                             radius: 14
-                            color: root.isSelected(modelData.key) ? "#D7D1DE" : "#ECE8F0"
+                            color: root.isSelected(modelData.text) ? "#D7D1DE" : "#ECE8F0"
                             border.width: 1
-                            border.color: root.isSelected(modelData.key) ? "#6A64A8" : "#00000012"
+                            border.color: root.isSelected(modelData.text) ? "#6A64A8" : "#00000012"
                             clip: true
 
                             Text {
@@ -107,7 +107,7 @@ Popup {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: root.toggle(modelData.key)
+                                onClicked: root.toggle(modelData.text)
                             }
                         }
                     }
@@ -117,10 +117,11 @@ Popup {
 
             Button {
                 text: "Подтвердить"
-                onClicked: root.confirmed(root.selectedKeys)
+                onClicked: root.confirmed(root.selectedText)
             }
         }
     }
+
     Component.onCompleted:{
         console.log("open")
         dlg.open()
