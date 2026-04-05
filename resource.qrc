@@ -4,7 +4,11 @@
         <file>PainAnalyzerContent/HeadScreen.qml</file>
         <file>PainAnalyzerContent/Scene3D.qml</file>
         <file>PainAnalyzerContent/Screen01.qml</file>
+        <file>PainAnalyzerContent/TriggerScreen.qml</file>
+        <file>PainAnalyzerContent/SymptomsScreen.qml</file>
+        <file>PainAnalyzerContent/SelectionDialog.qml</file>
         <file>PainAnalyzerContent/App.qml</file>
+
         <file>models/meshes/mesh_0_001_mesh.mesh</file>
         <file>models/meshes/mesh_0_002_mesh.mesh</file>
         <file>models/meshes/mesh_0_003_mesh.mesh</file>
