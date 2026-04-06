@@ -1,45 +1,73 @@
 import QtQuick
 import QtQuick.Controls
-
+import "AutorizationForms"
 ApplicationWindow {
     width: 800
     height: 600
     visible: true
-    id :win
+    id: win
     Component.onCompleted: {
-        console.log("Initial item:", stack.initialItem)
-        console.log("Current item:", stack.currentItem)
-        win.requestActivate()      // важно для desktop
-        win.raise()
-        win.forceActiveFocus()
+        console.log("stack:", stack)
+        console.log("Initial item:", stack.initialItem ? stack.initialItem : "null")
+        console.log("Current item:", stack.currentItem ? stack.currentItem : "null")
     }
+
     StackView {
         id: stack
         anchors.fill: parent
-        initialItem: Screen01{}   // где ваш Repeater
+        //initialItem: Screen01{}
+        initialItem: FIO {
+        }
     }
-    function goBack(){
-        console.log(" [UI] ",stack.depth)
+
+    function goBack() {
         if (stack.depth > 1) {
             stack.pop()
         }
     }
+
     property var sel
+
     function openScreen(key) {
         switch (key) {
-            case "type":     stack.push(Qt.resolvedUrl("TypeScreen.qml")); break
-            case "head":     stack.push(Qt.resolvedUrl("HeadScreen.qml")); break
-            case "triggers": stack.push(Qt.resolvedUrl ("TriggerScreen.qml")); break
-            case "symptoms": stack.push(Qt.resolvedUrl("SymptomsScreen.qml")); break
-            case "auras":    stack.push(Qt.resolvedUrl("AurasScreen.qml")); break
-            case "drugs":    stack.push(Qt.resolvedUrl("DrugsScreen.qml")); break
-            default: console.log("Unknown screen key:", key)
+            case "type":
+                stack.push(Qt.resolvedUrl("TypeScreen.qml"));
+                break
+            case "head":
+                stack.push(Qt.resolvedUrl("HeadScreen.qml"));
+                break
+            case "triggers":
+                stack.push(Qt.resolvedUrl("TriggerScreen.qml"));
+                break
+            case "symptoms":
+                stack.push(Qt.resolvedUrl("SymptomsScreen.qml"));
+                break
+            case "auras":
+                stack.push(Qt.resolvedUrl("AurasScreen.qml"));
+                break
+            case "drugs":
+                stack.push(Qt.resolvedUrl("DrugsScreen.qml"));
+                break
+            case "BaseInfo": {
+                console.log("[\\]")
+                stack.push(Qt.resolvedUrl("AutorizationForms/BaseInfo.qml"));
+                break
+            }
+            default:
+                console.log("Unknown screen key:", key)
         }
     }
 
     // ловим сигнал от текущего экрана (MainScreen)
     Connections {
         target: stack.currentItem
-        function onOpenRequested(key) { openScreen(key) }
+
+        function onOpenRequested(key) {
+            openScreen(key)
+        }
+        function onBackRequested(){
+            console.log("clicked")
+            goBack()
+        }
     }
 }
