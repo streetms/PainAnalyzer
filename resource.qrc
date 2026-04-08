@@ -10,6 +10,7 @@
         <file>PainAnalyzerContent/App.qml</file>
         <file>PainAnalyzerContent/AutorizationForms/FIO.qml</file>
         <file>PainAnalyzerContent/AutorizationForms/BaseInfo.qml</file>
+        <file>PainAnalyzerContent/AutorizationForms/Phone.qml</file>
         <file>models/meshes/mesh_0_001_mesh.mesh</file>
         <file>models/meshes/mesh_0_002_mesh.mesh</file>
         <file>models/meshes/mesh_0_003_mesh.mesh</file>

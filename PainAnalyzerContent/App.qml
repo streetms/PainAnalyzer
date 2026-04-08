@@ -16,7 +16,7 @@ ApplicationWindow {
         id: stack
         anchors.fill: parent
         //initialItem: Screen01{}
-        initialItem: FIO {
+        initialItem: Phone {
         }
     }
 
@@ -49,8 +49,15 @@ ApplicationWindow {
                 stack.push(Qt.resolvedUrl("DrugsScreen.qml"));
                 break
             case "BaseInfo": {
-                console.log("[\\]")
                 stack.push(Qt.resolvedUrl("AutorizationForms/BaseInfo.qml"));
+                break
+            }
+            case "FIO": {
+                stack.push(Qt.resolvedUrl("AutorizationForms/FIO.qml"));
+                break
+            }
+            case "Phone": {
+                stack.push(Qt.resolvedUrl("AutorizationForms/Phone.qml"));
                 break
             }
             default:
