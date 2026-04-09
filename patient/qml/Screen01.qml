@@ -193,7 +193,7 @@ Page {
                             Repeater {
                                 model: [{
                                     "key": "type",
-                                    "text": "Тип головной боли",
+                                    "text": "Тип боли",
                                     "small": true
                                 }, {
                                     "key": "head",

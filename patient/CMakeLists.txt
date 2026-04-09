@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.21)
 project(patient_app LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -30,11 +31,16 @@ set(QML_FILES
         qml/AutorizationForms/FIO.qml
         qml/AutorizationForms/Phone.qml
         qml/AutorizationForms/BaseInfo.qml
+        qml/Screen01.qml
         qml/HeadScreen.qml
+        qml/HeadModel.qml
         qml/Scene3D.qml
         qml/SelectionDialog.qml
         qml/SymptomsScreen.qml
         qml/TriggerScreen.qml
+        qml/PainTypeScreen.qml
+        qml/DrugScreen.qml
+        qml/AurasScreen.qml
 )
 
 # Создаём Qt-приложение
@@ -58,6 +64,7 @@ qt_add_resources(patient_app "qml_files"
         PREFIX "/patient"                # важно: должен совпадать с qrc:/patient
         BASE "${CMAKE_CURRENT_SOURCE_DIR}/qml"
         FILES ${QML_FILES}
+        resource.qrc
 )
 
 #Если используешь CMake < 3.21 — можно вручную прописать ресурсы

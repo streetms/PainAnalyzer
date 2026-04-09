@@ -30,8 +30,12 @@ ApplicationWindow {
 
     function openScreen(key) {
         switch (key) {
+            case "Record": {
+                stack.push(Qt.resolvedUrl("Screen01.qml"));
+                break
+            }
             case "type":
-                stack.push(Qt.resolvedUrl("TypeScreen.qml"));
+                stack.push(Qt.resolvedUrl("PainTypeScreen.qml"));
                 break
             case "head":
                 stack.push(Qt.resolvedUrl("HeadScreen.qml"));
@@ -46,7 +50,7 @@ ApplicationWindow {
                 stack.push(Qt.resolvedUrl("AurasScreen.qml"));
                 break
             case "drugs":
-                stack.push(Qt.resolvedUrl("DrugsScreen.qml"));
+                stack.push(Qt.resolvedUrl("DrugScreen.qml"));
                 break
             case "BaseInfo": {
                 stack.push(Qt.resolvedUrl("AutorizationForms/BaseInfo.qml"));

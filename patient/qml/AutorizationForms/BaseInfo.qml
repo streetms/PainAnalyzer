@@ -6,8 +6,8 @@ Item {
     id: root
     anchors.fill: parent
 
+    signal openRequested(string key)
     signal backRequested()
-    signal nextRequested()
     Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
     Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
     // выбранная дата
@@ -140,7 +140,7 @@ Item {
                 PatientManager.getPatient().setBirthday(root.selectedDate)
                 PatientManager.getPatient().setHeight(heightField.text)
                 PatientManager.getPatient().setWeight(weightField.text)
-
+                root.openRequested("Record")
             }
         }
     }
