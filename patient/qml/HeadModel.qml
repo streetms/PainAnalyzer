@@ -18,7 +18,7 @@ Node {
             objectName: "Mesh_0"
             pickable: true
             rotation: Qt.quaternion(0.716446, -0.591223, 0.318823, 0.188451)
-            source: "qrc:/PainAnalyzer/models/meshes/mesh_0_001_mesh.mesh"
+            source: "qrc:/PainAnalyzer/assets/meshes/mesh_0_001_mesh.mesh"
             // изначально серый
             materials: [baseGrayMaterial]
         }
@@ -27,7 +27,7 @@ Node {
             objectName: "Mesh_0.001"
             pickable: true
             rotation: Qt.quaternion(0.716446, -0.591223, 0.318823, 0.188451)
-            source: "qrc:/PainAnalyzer/models/meshes/mesh_0_002_mesh.mesh"
+            source: "qrc:/PainAnalyzer/assets/meshes/mesh_0_002_mesh.mesh"
             materials: [baseGrayMaterial]
         }
         Model {
@@ -35,7 +35,7 @@ Node {
             objectName: "Mesh_0.002"
             pickable: true
             rotation: Qt.quaternion(0.716446, -0.591223, 0.318823, 0.188451)
-            source: "qrc:/PainAnalyzer/models/meshes/mesh_0_003_mesh.mesh"
+            source: "qrc:/PainAnalyzer/assets/meshes/mesh_0_003_mesh.mesh"
             materials: [baseGrayMaterial]
         }
         Model {
@@ -43,7 +43,7 @@ Node {
             objectName: "Mesh_0.003"
             pickable: true
             rotation: Qt.quaternion(0.716446, -0.591223, 0.318823, 0.188451)
-            source: "qrc:/PainAnalyzer/models/meshes/mesh_0_004_mesh.mesh"
+            source: "qrc:/PainAnalyzer/assets/meshes/mesh_0_004_mesh.mesh"
             materials: [baseGrayMaterial]
         }
         Model {
@@ -51,7 +51,7 @@ Node {
             objectName: "Mesh_0.004"
             pickable: true
             rotation: Qt.quaternion(0.716446, -0.591223, 0.318823, 0.188451)
-            source: "qrc:/PainAnalyzer/models/meshes/mesh_0_005_mesh.mesh"
+            source: "qrc:/PainAnalyzer/assets/meshes/mesh_0_005_mesh.mesh"
             materials: [baseGrayMaterial]
         }
         Model {
@@ -59,7 +59,7 @@ Node {
             objectName: "Mesh_0.005"
             pickable: true
             rotation: Qt.quaternion(0.716446, -0.591223, 0.318823, 0.188451)
-            source: "qrc:/PainAnalyzer/models/meshes/mesh_0_006_mesh.mesh"
+            source: "qrc:/PainAnalyzer/assets/meshes/mesh_0_006_mesh.mesh"
             materials: [baseGrayMaterial]
         }
         Model {
@@ -67,7 +67,7 @@ Node {
             objectName: "Mesh_0.006"
             pickable: true
             rotation: Qt.quaternion(0.716446, -0.591223, 0.318823, 0.188451)
-            source: "qrc:/PainAnalyzer/models/meshes/mesh_0_007_mesh.mesh"
+            source: "qrc:/PainAnalyzer/assets/meshes/mesh_0_007_mesh.mesh"
             materials: [baseGrayMaterial]
         }
     }

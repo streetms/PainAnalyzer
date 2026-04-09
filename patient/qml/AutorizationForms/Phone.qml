@@ -5,7 +5,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+import PainAnalyzer 1.0
 Item {
     id: root
     anchors.fill: parent
@@ -18,7 +18,6 @@ Item {
         color: "#FFFFFF"
     }
 
-    // Карточка по центру (как на скрине)
     Rectangle {
         id: card
         width: Math.min(420, root.width - 40)
@@ -39,31 +38,18 @@ Item {
 
             Label {
                 Layout.alignment: Qt.AlignHCenter
-                text: "Введите ФИО"
+                text: "Введите номер телефона"
                 color: "#333333"
                 font.pixelSize: 16
                 font.weight: Font.Medium
             }
 
             TextField {
-                id: lastName
+                Layout.alignment: Qt.AlignHCenter
+                id: phone
                 Layout.fillWidth: true
-                placeholderText: "Фамилия"
-                text: "Иванов"
-            }
+                placeholderText: "телефон"
 
-            TextField {
-                id: firstName
-                Layout.fillWidth: true
-                placeholderText: "Имя"
-                text: "Иван"
-            }
-
-            TextField {
-                id: patronymic
-                Layout.fillWidth: true
-                placeholderText: "Отчество"
-                text: "Иванович"
             }
 
             Item { Layout.fillWidth: true; Layout.fillHeight: true }
@@ -112,16 +98,11 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
-            // Если нужно открывать следующий экран через ваш switch:
-            // onClicked: root.openRequested("type")
+
             onClicked: {
-                var fullName = [
-                    lastName.text,
-                    firstName.text,
-                    patronymic.text
-                ]
-                User.setFullName(fullName)
-                root.openRequested("BaseInfo")
+                PatientManager.getPatient().setPhone(phone.text)
+                //Patient.setPhone(phone.text)
+                root.openRequested("FIO")
             }
         }
     }

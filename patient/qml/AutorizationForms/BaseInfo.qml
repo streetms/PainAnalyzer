@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+import PainAnalyzer 1.0
 Item {
     id: root
     anchors.fill: parent
@@ -137,9 +137,10 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
             onClicked: {
-                User.setBirthday(root.selectedDate)
-                User.setHeight(heightField.text)
-                User.setWeight(weightField.text)
+                PatientManager.getPatient().setBirthday(root.selectedDate)
+                PatientManager.getPatient().setHeight(heightField.text)
+                PatientManager.getPatient().setWeight(weightField.text)
+
             }
         }
     }

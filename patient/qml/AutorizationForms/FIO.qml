@@ -5,7 +5,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+import PainAnalyzer 1.0
 Item {
     id: root
     anchors.fill: parent
@@ -38,18 +38,31 @@ Item {
 
             Label {
                 Layout.alignment: Qt.AlignHCenter
-                text: "Введите номер телефона"
+                text: "Введите ФИО"
                 color: "#333333"
                 font.pixelSize: 16
                 font.weight: Font.Medium
             }
 
             TextField {
-                anchors.centerIn: parent
                 id: lastName
                 Layout.fillWidth: true
-                placeholderText: "телефон"
-                text: ""
+                placeholderText: "Фамилия"
+                text: "Иванов"
+            }
+
+            TextField {
+                id: firstName
+                Layout.fillWidth: true
+                placeholderText: "Имя"
+                text: "Иван"
+            }
+
+            TextField {
+                id: patronymic
+                Layout.fillWidth: true
+                placeholderText: "Отчество"
+                text: "Иванович"
             }
 
             Item { Layout.fillWidth: true; Layout.fillHeight: true }
@@ -100,8 +113,9 @@ Item {
             }
 
             onClicked: {
-
-                root.openRequested("FIO")
+                var fullName = lastName.text + " " + firstName.text + " " + patronymic.text
+                PatientManager.getPatient().setFullName(fullName)
+                root.openRequested("BaseInfo")
             }
         }
     }

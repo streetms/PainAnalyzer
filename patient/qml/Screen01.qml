@@ -111,17 +111,18 @@ Page {
                             implicitHeight: track.height
 
                             handle: Rectangle {
-                                width: 24
                                 height: 24
                                 radius: 12
                                 color: "#E00000"
                                 border.width: 1
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: 274
+                                anchors.rightMargin: 274
                                 border.color: "#B3000059"
 
                                 // ДВИЖЕНИЕ РУЧКИ:
-                                x: painSlider.leftPadding
-                                    + painSlider.visualPosition * (painSlider.availableWidth - width)
-                                y: (painSlider.availableHeight - height) / 2
                             }
 
                             onValueChanged: page.painLevel = Math.round(value)
