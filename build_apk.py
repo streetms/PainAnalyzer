@@ -220,13 +220,13 @@ DEFAULT_CONFIG = {
             "QT_HOST_PATH": "",
             "QT_ANDROID_SDK_ROOT": "",
             "QT_ANDROID_NDK_ROOT": "",
+            "ANDROID_SDK_ROOT": "",
             "CMAKE_TOOLCHAIN_FILE": "",
             "ANDROID_ABI": "arm64-v8a",
             "ANDROID_PLATFORM": "android-35",
             "CMAKE_PREFIX_PATH": "",
             "CMAKE_FIND_ROOT_PATH_MODE_PACKAGE": "BOTH",
             "QT_ANDROID_BUILD_TOOLS_REVISION": "35.0.0",
-            "ANDROID_SDK_ROOT": ""
         },
 
         "cmake_defines_debug": {},
@@ -282,6 +282,7 @@ def parse_args():
     p.add_argument("--install", action="store_true", help="Install produced APK via adb")
     p.add_argument("--apk-target", help="Force CMake target to build APK (overrides auto-detect and config)")
     p.add_argument("--no-sign", action="store_true", help="Disable auto-sign even for release")
+    p.add_argument("--target")
     return p.parse_args()
 
 # --------------------- main ---------------------
@@ -312,7 +313,6 @@ def main():
     defines = dict(cfg.get("cmake_defines_common", {}))
     defines.update(cfg.get("cmake_defines_release" if build_type == "release" else "cmake_defines_debug", {}))
     defines["CMAKE_BUILD_TYPE"] = "Release" if build_type == "release" else "Debug"
-
     # Reconfigure if requested
     if args.reconfigure and build_dir.exists():
         cache = build_dir / "CMakeCache.txt"
@@ -332,17 +332,7 @@ def main():
     run(["cmake", "--build", str(build_dir), "--parallel"])
 
     # Determine APK CMake target
-    forced_target = (args.apk_target or "").strip()
-    if forced_target:
-        apk_target = forced_target
-    else:
-        cfg_target = (cfg.get("apk_target_release") if build_type == "release" else cfg.get("apk_target_debug")) or ""
-        cfg_target = str(cfg_target).strip()
-        if cfg_target:
-            apk_target = cfg_target
-        else:
-            targets = list_cmake_targets(build_dir)
-            apk_target = pick_apk_target(project_name, targets)
+    apk_target = args.target
 
     if not apk_target:
         fail(
