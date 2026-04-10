@@ -17,13 +17,13 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 # Заголовки и исходники
 set(CORE_SOURCES
-        src/auth/AuthService.cpp
+        src/network/NetworkManager.cpp
         src/user/UserManager.cpp
         src/user/UserService.cpp
 )
 
 set(CORE_HEADERS
-        include/auth/AuthService.h
+        include/network/NetworkManager.h
         include/user/UserManager.h
         include/user/UserService.h
         include/models/User.h

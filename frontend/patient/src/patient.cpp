@@ -4,11 +4,20 @@
 
 #include "patient.h"
 
+#include <QJsonObject>
+#include <optional>
+#include <QString>
 
-// Patient * Patient::instance() {
-//     static Patient user;
-//     return &user;
-// }
+QJsonObject Patient::toJson() const {
+
+    return {
+        {"fullname",_fullName.value()},
+        {"birthday",_birthday.value().toString()},
+        {"height",_height.value()},
+        {"phone",_phone.value()},
+        {"weight",_weight.value()}
+    };
+}
 
 void Patient::setFullName(const QString &fullName) {
     _fullName = fullName;

@@ -16,18 +16,15 @@ int main() {
             tcp::socket socket(io);
             acceptor.accept(socket);
 
-            std::array<char, 1024> buffer{};
-            boost::system::error_code ec;
+            uint32_t size;
+            boost::asio::read(socket, boost::asio::buffer(&size, sizeof(size)));
+            size = ntohl(size);
 
-            size_t length = socket.read_some(boost::asio::buffer(buffer), ec);
+            std::vector<char> buffer(size);
+            boost::asio::read(socket, boost::asio::buffer(buffer));
 
-            if (!ec) {
-                std::string message(buffer.data(), length);
-                std::cout << "Received: " << message << std::endl;
-
-                std::string reply = "OK";
-                boost::asio::write(socket, boost::asio::buffer(reply));
-            }
+            std::string json(buffer.begin(), buffer.end());
+            std::cout << "Received JSON: " << json << std::endl;
         }
     }
     catch (std::exception& e) {

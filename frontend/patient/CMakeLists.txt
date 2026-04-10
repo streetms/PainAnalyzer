@@ -14,7 +14,8 @@ find_package(Qt6 REQUIRED COMPONENTS
         Gui
         Qml
         QuickControls2
-        Sql)
+        Sql
+        Network)
 set(SRC
         src/main.cpp
         src/patient.cpp
@@ -57,11 +58,12 @@ target_link_libraries(patient_app
         Qt6::Qml
         Qt6::QuickControls2
         Qt6::Sql
+        Qt6::Network
 )
 
 # Настраиваем пути поиска и ресурс QML
 qt_add_resources(patient_app "qml_files"
-        PREFIX "/frontend/patient"                # важно: должен совпадать с qrc:/patient
+        PREFIX "/patient"                # важно: должен совпадать с qrc:/patient
         BASE "qml"
         FILES ${QML_FILES}
         resource.qrc

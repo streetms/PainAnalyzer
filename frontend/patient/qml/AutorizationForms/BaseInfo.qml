@@ -140,6 +140,7 @@ Item {
                 PatientManager.getPatient().setBirthday(root.selectedDate)
                 PatientManager.getPatient().setHeight(heightField.text)
                 PatientManager.getPatient().setWeight(weightField.text)
+                PatientManager.upload()
                 root.openRequested("Record")
             }
         }
