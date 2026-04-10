@@ -61,8 +61,8 @@ target_link_libraries(patient_app
 
 # Настраиваем пути поиска и ресурс QML
 qt_add_resources(patient_app "qml_files"
-        PREFIX "/patient"                # важно: должен совпадать с qrc:/patient
-        BASE "${CMAKE_CURRENT_SOURCE_DIR}/qml"
+        PREFIX "/frontend/patient"                # важно: должен совпадать с qrc:/patient
+        BASE "qml"
         FILES ${QML_FILES}
         resource.qrc
 )

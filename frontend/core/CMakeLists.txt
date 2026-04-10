@@ -46,5 +46,5 @@ target_link_libraries(core
 
 # Подключаем include директорию
 target_include_directories(core
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+        PUBLIC include
 )
