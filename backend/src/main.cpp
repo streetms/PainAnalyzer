@@ -4,7 +4,7 @@
 #include <array>
 
 using boost::asio::ip::tcp;
-
+//Received JSON: {"data":{"birthday":"Thu May 15 1924","fullname":"Иванов Иван Иванович","height":155,"phone":"","weight":44},"type":"create_patient"}
 int main() {
     try {
         boost::asio::io_context io;
@@ -24,7 +24,7 @@ int main() {
             boost::asio::read(socket, boost::asio::buffer(buffer));
 
             std::string json(buffer.begin(), buffer.end());
-            std::cout << "Received JSON: " << json << std::endl;
+            std::cout << "Received JSON: " << json << std::endl;  
         }
     }
     catch (std::exception& e) {

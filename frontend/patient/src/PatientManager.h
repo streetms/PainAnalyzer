@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "patient.h"
+#include "models/Patient.h"
 #include "user/UserManager.h"
 #include "network/NetworkManager.h"
 class PatientManager : public UserManager {
@@ -14,5 +14,10 @@ public:
 
 public slots:
     void upload();
+    void setPhone(QString phone);
+    void setFullName(QString fullName);
+    void setBirthday(QString birthday);
+    void setHeight(int height);
+    void setWeight(int weight);
     Patient* getPatient();
 };

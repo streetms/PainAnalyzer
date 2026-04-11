@@ -26,7 +26,6 @@ set(CORE_HEADERS
         include/network/NetworkManager.h
         include/user/UserManager.h
         include/user/UserService.h
-        include/models/User.h
 )
 
 # Создаём библиотеку

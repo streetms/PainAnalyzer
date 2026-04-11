@@ -114,7 +114,7 @@ Item {
 
             onClicked: {
                 var fullName = lastName.text + " " + firstName.text + " " + patronymic.text
-                PatientManager.getPatient().setFullName(fullName)
+                PatientManager.setFullName(fullName)
                 root.openRequested("BaseInfo")
             }
         }

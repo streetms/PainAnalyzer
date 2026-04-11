@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
-project(patient_app LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 17)
+project(patient)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
@@ -18,12 +17,10 @@ find_package(Qt6 REQUIRED COMPONENTS
         Network)
 set(SRC
         src/main.cpp
-        src/patient.cpp
         src/PatientManager.cpp
 )
 
 set(HEADERS
-        src/patient.h
         src/PatientManager.h
 )
 

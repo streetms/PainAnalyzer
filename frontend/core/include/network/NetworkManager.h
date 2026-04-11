@@ -2,6 +2,7 @@
 
 #include <QTcpSocket>
 #include <QJsonObject>
+#include <nlohmann/json_fwd.hpp>
 
 class NetworkManager : public QObject
 {
@@ -10,7 +11,7 @@ public:
     explicit NetworkManager(QObject *parent = nullptr);
     static NetworkManager* instance();
     void connectToServer(const QString &host, quint16 port);
-    void sendRequest(const QString &type, const QJsonObject &data);
+    void sendRequest(const QString &type, nlohmann::json json);
 
 
 

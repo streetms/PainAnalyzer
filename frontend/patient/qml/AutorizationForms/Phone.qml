@@ -100,7 +100,7 @@ Item {
             }
 
             onClicked: {
-                PatientManager.getPatient().setPhone(phone.text)
+                PatientManager.setPhone(phone.text)
                 //Patient.setPhone(phone.text)
                 root.openRequested("FIO")
             }

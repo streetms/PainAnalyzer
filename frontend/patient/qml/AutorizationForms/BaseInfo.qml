@@ -137,9 +137,9 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
             onClicked: {
-                PatientManager.getPatient().setBirthday(root.selectedDate)
-                PatientManager.getPatient().setHeight(heightField.text)
-                PatientManager.getPatient().setWeight(weightField.text)
+                PatientManager.setBirthday(root.selectedDate)
+                PatientManager.setHeight(heightField.text)
+                PatientManager.setWeight(weightField.text)
                 PatientManager.upload()
                 root.openRequested("Record")
             }
