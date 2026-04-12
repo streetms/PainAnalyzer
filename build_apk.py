@@ -200,7 +200,7 @@ def sign_apk(
 DEFAULT_CONFIG = {
 
         "project_name": "PainAnalyzer",
-        "source_dir": ".",
+        "source_dir": "patient",
 
         "build_type": "debug",
 
@@ -227,6 +227,7 @@ DEFAULT_CONFIG = {
             "CMAKE_PREFIX_PATH": "",
             "CMAKE_FIND_ROOT_PATH_MODE_PACKAGE": "BOTH",
             "QT_ANDROID_BUILD_TOOLS_REVISION": "35.0.0",
+            "BUILD_FRONTEND": "ON"
         },
 
         "cmake_defines_debug": {},
@@ -303,7 +304,7 @@ def main():
 
     project_name = str(cfg.get("project_name", "App"))
     build_type = cfg["build_type"]
-    source_dir = Path(cfg["source_dir"])
+    source_dir = "."
     build_dir = Path(cfg["build_dir"])
 
     do_install = bool(args.install or cfg.get("install", False))

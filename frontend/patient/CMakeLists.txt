@@ -42,10 +42,10 @@ set(QML_FILES
 )
 
 # Создаём Qt-приложение
-qt_add_executable(patient_app ${SRC} ${HEADERS} ${QML_FILES})
+qt_add_executable(patient ${SRC} ${HEADERS} ${QML_FILES})
 
 # Подключаем core как библиотеку
-target_link_libraries(patient_app
+target_link_libraries(patient
         PRIVATE core
         PRIVATE
         Qt6::Quick
@@ -59,7 +59,7 @@ target_link_libraries(patient_app
 )
 
 # Настраиваем пути поиска и ресурс QML
-qt_add_resources(patient_app "qml_files"
+qt_add_resources(patient "qml_files"
         PREFIX "/patient"                # важно: должен совпадать с qrc:/patient
         BASE "qml"
         FILES ${QML_FILES}
@@ -67,4 +67,4 @@ qt_add_resources(patient_app "qml_files"
 )
 
 #Если используешь CMake < 3.21 — можно вручную прописать ресурсы
-#set_target_properties(patient_app PROPERTIES AUTOMOC ON)#
+#set_target_properties(patient PROPERTIES AUTOMOC ON)#

@@ -1,11 +1,10 @@
 project(core LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+
 find_package(Qt6 REQUIRED COMPONENTS
         Quick
         Quick3D
@@ -41,6 +40,7 @@ target_link_libraries(core
         Qt6::Qml
         Qt6::QuickControls2
         Qt6::Sql
+        nlohmann_json::nlohmann_json
 )
 
 # Подключаем include директорию

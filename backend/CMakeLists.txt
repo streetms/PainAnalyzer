@@ -17,6 +17,7 @@ set(HEADERS
 
 add_executable(PainAnalyzerServer ${SRC} ${HEADERS})
 target_link_libraries(PainAnalyzerServer
+        PRIVATE common
         Boost::system
         pthread
 )
