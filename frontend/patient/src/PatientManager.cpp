@@ -25,9 +25,9 @@ void PatientManager::setFullName(QString fullName) {
     patient->fullName = fullName.toStdString();
 }
 
-void PatientManager::setBirthday(QString birthday) {
+void PatientManager::setBirthday(QDate birthday) {
     auto patient = getPatient();
-    patient->birthday = birthday.toStdString();
+    patient->birthday = birthday.toString(Qt::ISODate).toStdString();
 }
 
 void PatientManager::setHeight(int height) {

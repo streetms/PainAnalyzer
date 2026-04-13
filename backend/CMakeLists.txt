@@ -1,6 +1,5 @@
-cmake_minimum_required(VERSION 3.21)
 project(PainAnalyzerServer)
-find_package(Boost REQUIRED COMPONENTS system)
+#find_package(Boost REQUIRED COMPONENTS system)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,6 +17,9 @@ set(HEADERS
 add_executable(PainAnalyzerServer ${SRC} ${HEADERS})
 target_link_libraries(PainAnalyzerServer
         PRIVATE common
-        Boost::system
+#        Boost::system
         pthread
+        pqxx
+        pq
+        cpp_dotenv
 )

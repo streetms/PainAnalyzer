@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.21)
 project(patient)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -46,7 +45,7 @@ qt_add_executable(patient ${SRC} ${HEADERS} ${QML_FILES})
 
 # Подключаем core как библиотеку
 target_link_libraries(patient
-        PRIVATE core
+        PRIVATE core common
         PRIVATE
         Qt6::Quick
         Qt6::Quick3D

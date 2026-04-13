@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 project(PainApp LANGUAGES CXX)
-
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_FRONTEND "Build frontend" OFF)
@@ -9,19 +9,22 @@ include(FetchContent)
 
 FetchContent_Declare(
         nlohmann_json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG v3.12.0
+        URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
 )
-
 FetchContent_MakeAvailable(nlohmann_json)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common/include)
+
+add_subdirectory(common)
 if(BUILD_FRONTEND)
-    add_subdirectory(frontend/core)
-    add_subdirectory(frontend/patient)
+    add_subdirectory(frontend)
 endif()
 
 if(BUILD_BACKEND)
     add_subdirectory(backend)
+    FetchContent_Declare(
+            cpp_dotenv
+            URL https://github.com/adeharo9/cpp-dotenv/archive/refs/tags/v1.0.0-alpha.tar.gz
+    )
+    FetchContent_MakeAvailable(cpp_dotenv)
 endif()
 
 #add_subdirectory(backend EXCLUDE_FROM_ALL)

@@ -33,6 +33,7 @@ add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS})
 # Подключаем Qt
 target_link_libraries(core
         PUBLIC
+        common
         Qt6::Quick
         Qt6::Quick3D
         Qt6::Core
@@ -40,7 +41,7 @@ target_link_libraries(core
         Qt6::Qml
         Qt6::QuickControls2
         Qt6::Sql
-        nlohmann_json::nlohmann_json
+
 )
 
 # Подключаем include директорию

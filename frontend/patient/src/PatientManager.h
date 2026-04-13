@@ -16,7 +16,7 @@ public slots:
     void upload();
     void setPhone(QString phone);
     void setFullName(QString fullName);
-    void setBirthday(QString birthday);
+    void setBirthday(QDate birthday);
     void setHeight(int height);
     void setWeight(int weight);
     Patient* getPatient();
