@@ -1,6 +1,10 @@
 project(PainAnalyzerServer)
 #find_package(Boost REQUIRED COMPONENTS system)
-
+configure_file(
+        ${CMAKE_SOURCE_DIR}/.env
+        ${CMAKE_CURRENT_BINARY_DIR}/.env
+        COPYONLY
+)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -13,6 +17,7 @@ set(HEADERS
         src/Server.h
         src/DataBase.h
 )
+
 
 add_executable(PainAnalyzerServer ${SRC} ${HEADERS})
 target_link_libraries(PainAnalyzerServer
