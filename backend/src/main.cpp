@@ -1,41 +1,30 @@
-// server.cpp
-#include <boost/asio.hpp>
 #include <iostream>
-#include <dotenv.h>
-#include "DataBase.h"
-#include <array>
+#include "service/AuthService.h"
+#include "http/Router.h"
+#include "http/Server.h"
+#include "app/AppContext.h"
+#include "handlers/AuthHandlers.h"
+void init_router(std::shared_ptr<Router> router,std::shared_ptr<AppContext> ctx) {
+    router->add("/register",[ctx](Request req){
+            return registerUser(req, *ctx);
+        });
+}
 
-using boost::asio::ip::tcp;
-//Received JSON: {"data":{"birthday":"Thu May 15 1924","fullname":"Иванов Иван Иванович","height":155,"phone":"","weight":44},"type":"create_patient"}
-int main() {
-    dotenv::env.load_dotenv();
-    DataBase db;
-    try {
-        boost::asio::io_context io;
+int main()
+{
+    auto ctx = std::make_shared<AppContext>();
 
-        tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 5555));
-        std::cout << "Server started on port 5555\n";
+    ctx->auth = std::make_shared<AuthService>();
 
-        for (;;) {
-            tcp::socket socket(io);
-            acceptor.accept(socket);
+    auto router = std::make_shared<Router>();
+    init_router(router,ctx);
+    net::io_context ioc;
 
-            uint32_t size;
-            boost::asio::read(socket, boost::asio::buffer(&size, sizeof(size)));
-            size = ntohl(size);
+    std::make_shared<Server>(
+            ioc,
+            tcp::endpoint(tcp::v4(), 5555),router)->run();
 
-            std::vector<char> buffer(size);
-            boost::asio::read(socket, boost::asio::buffer(buffer));
+    std::cout << "Server started on port 5555\n";
 
-            std::string packet(buffer.begin(), buffer.end());
-            std::cout << "Received JSON: " << packet << std::endl;
-            nlohmann::json json = nlohmann::json::parse(packet);
-            if (json["type"] == "create_patient") {
-                db.add_patient(json["data"].get<Patient>());
-            }
-        }
-    }
-    catch (std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-    }
+    ioc.run();
 }

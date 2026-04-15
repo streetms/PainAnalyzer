@@ -5,16 +5,17 @@
 #pragma once
 #include "models/Patient.h"
 #include "user/UserManager.h"
-#include "network/NetworkManager.h"
+#include "network/AuthManager.h"
 class PatientManager : public UserManager {
 private:
     Q_OBJECT
+    AuthManager* _authManager = nullptr;
 public:
-    static PatientManager* instance();
-
+    // static PatientManager* instance();
+    PatientManager();
 public slots:
-    void upload();
-    void setPhone(QString phone);
+    void registerPatient();
+    void setEmail(QString email);
     void setFullName(QString fullName);
     void setBirthday(QDate birthday);
     void setHeight(int height);

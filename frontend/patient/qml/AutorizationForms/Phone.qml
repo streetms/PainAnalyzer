@@ -38,7 +38,7 @@ Item {
 
             Label {
                 Layout.alignment: Qt.AlignHCenter
-                text: "Введите номер телефона"
+                text: "Введите email"
                 color: "#333333"
                 font.pixelSize: 16
                 font.weight: Font.Medium
@@ -46,9 +46,9 @@ Item {
 
             TextField {
                 Layout.alignment: Qt.AlignHCenter
-                id: phone
+                id: email
                 Layout.fillWidth: true
-                placeholderText: "телефон"
+                placeholderText: "email"
 
             }
 
@@ -100,8 +100,8 @@ Item {
             }
 
             onClicked: {
-                PatientManager.setPhone(phone.text)
-                //Patient.setPhone(phone.text)
+                PatientManager.setEmail(email.text)
+                //Patient.setPhone(email.text)
                 root.openRequested("FIO")
             }
         }

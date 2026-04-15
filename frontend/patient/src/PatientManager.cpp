@@ -1,23 +1,25 @@
 #include "PatientManager.h"
 #include <QJsonObject>
-PatientManager * PatientManager::instance() {
-    static PatientManager manager;
-    manager._user = new Patient;
-    return &manager;
+// PatientManager * PatientManager::instance() {
+//     static PatientManager manager;
+//     manager._user = new Patient;
+//     return &manager;
+// }
+
+PatientManager::PatientManager() {
+    _user = new Patient();
+    _authManager = new AuthManager();
 }
 
-void PatientManager::upload() {
-    auto networkManager = NetworkManager::instance();
-    auto patient = getPatient();
-    networkManager->sendRequest(
-        "create_patient",
-                *patient
-        );
+void PatientManager::registerPatient() {
+    _authManager->registerUser(*getPatient());
 }
 
-void PatientManager::setPhone(QString phone) {
+
+
+void PatientManager::setEmail(QString email) {
     auto patient = getPatient();
-    patient->phone = phone.toStdString();
+    patient->email = email.toStdString();
 }
 
 void PatientManager::setFullName(QString fullName) {

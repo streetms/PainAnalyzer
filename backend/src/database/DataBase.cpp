@@ -5,7 +5,7 @@
 #include "DataBase.h"
 
 #include <iostream>
-
+#include "utils/alias.h"
 
 std::string DataBase::getEnv(const char *name) {
 
@@ -29,6 +29,6 @@ DataBase::DataBase() {
 void DataBase::add_patient(const Patient &patient) {
     pqxx::work txn(conn);
     txn.exec_prepared("add_patient",
-        patient.phone,patient.fullName,patient.birthday,patient.height,patient.weight);
+        patient.email,patient.fullName,patient.birthday,patient.height,patient.weight);
     txn.commit();
 }

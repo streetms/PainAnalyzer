@@ -16,15 +16,15 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 # Заголовки и исходники
 set(CORE_SOURCES
-        src/network/NetworkManager.cpp
+        src/network/ApiClient.cpp
         src/user/UserManager.cpp
-        src/user/UserService.cpp
+        src/network/AuthManager.cpp
 )
 
 set(CORE_HEADERS
-        include/network/NetworkManager.h
+        include/network/ApiClient.h
         include/user/UserManager.h
-        include/user/UserService.h
+        include/network/AuthManager.h
 )
 
 # Создаём библиотеку
@@ -41,7 +41,6 @@ target_link_libraries(core
         Qt6::Qml
         Qt6::QuickControls2
         Qt6::Sql
-
 )
 
 # Подключаем include директорию

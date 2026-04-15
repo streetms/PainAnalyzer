@@ -3,6 +3,7 @@
 
 #include <pqxx/pqxx>
 #include "models/Patient.h"
+
 class DataBase
 {
     private:

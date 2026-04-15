@@ -9,24 +9,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Boost REQUIRED)
 find_package(libpqxx REQUIRED)
 
-
 set(SRC
         src/main.cpp
-        src/Server.cpp
+        src/http/Server.cpp
         src/database/DataBase.cpp
-        src/database/auth.cpp
-)
-set(HEADERS
-        src/Server.h
-        src/database/DataBase.h
-        src/database/auth.h
+        src/service/AuthService.cpp
+        src/http/Session.cpp
+        src/http/Router.cpp
+        src/handlers/AuthHandlers.cpp
 )
 
-
-add_executable(PainAnalyzerServer ${SRC} ${HEADERS})
+add_executable(PainAnalyzerServer ${SRC})
 target_link_libraries(PainAnalyzerServer
         PRIVATE common
         Boost::headers
         libpqxx::pqxx
         cpp_dotenv
 )
+target_include_directories(PainAnalyzerServer PRIVATE include)
