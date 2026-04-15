@@ -6,12 +6,14 @@ function(add_dependency name)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "" ${ARGN})
 
     if(ARG_FIND_PACKAGE)
-        find_package(${ARG_FIND_PACKAGE} QUIET)
+        set(pkg ${ARG_FIND_PACKAGE})
     else()
-        find_package(${name} QUIET)
+        set(pkg ${name})
     endif()
 
-    if(NOT ${name}_FOUND)
+    find_package(${pkg} QUIET)
+
+    if(NOT ${pkg}_FOUND)
         message(STATUS "Fetching ${name} from Git")
 
         FetchContent_Declare(
@@ -22,6 +24,8 @@ function(add_dependency name)
         )
 
         FetchContent_MakeAvailable(${name})
+
+        find_package(${pkg} QUIET)
     endif()
 endfunction()
 
@@ -37,5 +41,5 @@ if (BUILD_BACKEND)
             https://github.com/adeharo9/cpp-dotenv.git
             GIT_TAG v1.0.0
     )
-
 endif()
+set(CMAKE_CXX_STANDARD 23)
