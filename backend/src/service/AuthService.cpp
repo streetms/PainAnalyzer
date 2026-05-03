@@ -10,23 +10,21 @@
 #include <boost/beast/ssl.hpp>
 
 #include <iostream>
-#include <random>
 #include <format>
 
+#include "domain/auth/Token.h"
 #include "utils/alias.h"
 #include "service/AuthService.h"
+
 namespace ssl = boost::asio::ssl;
 
 
-std::string AuthService::generateToken() {
-    std::random_device rd;
-    std::mt19937_64 gen(rd());
-    std::uniform_int_distribution<uint64_t> dist;
-
-    std::stringstream ss;
-    ss << std::hex << dist(gen) << dist(gen);
-    return ss.str();
-}
+// std::string AuthService::generate_token() {
+//     unsigned char buf[32];
+//     getrandom(buf, sizeof(buf), 0);
+//
+//     return to_hex(buf, 32);
+// }
 
 std::string AuthService::getTokenFromTarget(const std::string &target) {
     auto pos = target.find("token=");
@@ -53,7 +51,7 @@ net::awaitable<void> AuthService::sendAuthLinkToEmail(const std::string &email) 
     co_await stream.async_handshake(ssl::stream_base::client, net::use_awaitable);
     std::string link = std::format(
             "http://streetms.ru:5555/auth/verify?token={}",
-            generateToken()
+            Token<32>::generate().to_string()
     );
 
     nlohmann::json json{
@@ -71,7 +69,9 @@ net::awaitable<void> AuthService::sendAuthLinkToEmail(const std::string &email) 
     req.set(http::field::host, "api.resend.com");
     req.set(http::field::content_type, "application/json");
     req.set(http::field::user_agent, "PainAnalyzer");
-    req.set("Authorization", "Bearer re_LFx2HX9f_9fbsJbyAUpNQdPag12F9p6xu");
+    auto API_KEY = std::string(std::getenv("RESEND_API_KEY"));
+    std::cout << API_KEY << std::endl;
+    req.set("Authorization", "Bearer "+ API_KEY);
 
     req.body() = json.dump();
     req.prepare_payload();
@@ -87,9 +87,11 @@ net::awaitable<void> AuthService::sendAuthLinkToEmail(const std::string &email) 
 
     beast::error_code ec;
     stream.shutdown(ec);
+    co_return;
 }
 
 std::string AuthService::to_html_link(std::string_view text, std::string_view link) {
     return std::format("<a href='{}'>{}</a>",link,text);
 }
+
 

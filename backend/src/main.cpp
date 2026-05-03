@@ -1,4 +1,5 @@
 #include <iostream>
+#include <dotenv.h>
 #include "service/AuthService.h"
 #include "http/Router.h"
 #include "http/Server.h"
@@ -12,6 +13,7 @@ void init_router(std::shared_ptr<Router> router,std::shared_ptr<AppContext> ctx)
 
 int main()
 {
+    dotenv::env.load_dotenv();
     auto ctx = std::make_shared<AppContext>();
 
     ctx->auth = std::make_shared<AuthService>();
