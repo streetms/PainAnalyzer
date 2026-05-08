@@ -5,10 +5,9 @@
 #include "http/Server.h"
 #include "app/AppContext.h"
 #include "handlers/AuthHandlers.h"
-void init_router(std::shared_ptr<Router> router,std::shared_ptr<AppContext> ctx) {
-    router->add("/register",[ctx](Request req){
-            return registerUser(req, *ctx);
-        });
+void init_router(std::shared_ptr<Router> router) {
+    router->add("/register",registerUser);
+
 }
 
 int main()
@@ -18,8 +17,8 @@ int main()
 
     ctx->auth = std::make_shared<AuthService>();
 
-    auto router = std::make_shared<Router>();
-    init_router(router,ctx);
+    auto router = std::make_shared<Router>(ctx);
+    init_router(router);
     net::io_context ioc;
 
     std::make_shared<Server>(
