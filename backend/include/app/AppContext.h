@@ -11,7 +11,8 @@
 #include "service/AuthService.h"
 
 struct AppContext {
-    AppContext(size_t connectionPoolSize, size_t threadPoolSize) :
+    AppContext( net::io_context& ioc,size_t connectionPoolSize, size_t threadPoolSize) :
+    ioc_(ioc),
     threadPool_(threadPoolSize),
     connectionPool_("",connectionPoolSize),
     db_(threadPool_,connectionPool_),
@@ -21,6 +22,7 @@ struct AppContext {
     }
     AuthHandler authHandler;
 private:
+    net::io_context& ioc_;
     db::Database db_;
     net::thread_pool threadPool_;
     db::ConnectionPool connectionPool_;

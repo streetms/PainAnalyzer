@@ -13,16 +13,28 @@ void router_setup(Router& router, AppContext& ctx) {
 int main()
 {
     dotenv::env.load_dotenv();
-    auto ctx = std::make_shared<AppContext>(10,4);
-    auto router = std::make_shared<Router>();
-    router_setup(*router, *ctx);
+
     net::io_context ioc;
 
+    auto ctx = std::make_shared<AppContext>(ioc, 10, 4);
+
+    auto router = std::make_shared<Router>();
+    router_setup(*router, *ctx);
+
     std::make_shared<Server>(
-            ioc,
-            tcp::endpoint(tcp::v4(), 5555),router)->run();
+        ioc,
+        tcp::endpoint(tcp::v4(), 5555),
+        router
+    )->run();
 
     std::cout << "Server started on port 5555\n";
+    std::vector<std::thread> threads;
+    int n = std::thread::hardware_concurrency();
+    for (int i = 0; i < n; ++i) {
+        threads.emplace_back([&ioc]() {
+            ioc.run();
+        });
+    }
 
-    ioc.run();
+    for (auto& t : threads) t.join();
 }
