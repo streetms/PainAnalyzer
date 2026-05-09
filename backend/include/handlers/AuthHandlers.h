@@ -1,4 +1,12 @@
 #pragma once
 #include "utils/alias.h"
-#include "app/AppContext.h"
-net::awaitable<Response> registerUser(Request req, AppContext& ctx);
+#include "service/AuthService.h"
+class AuthHandler {
+public:
+    net::awaitable<Response> registerUser(Request req);
+    net::awaitable<Response> verifyUser(Request req);
+    AuthHandler(AuthService& authService);
+private:
+    AuthService& auth_;
+};
+

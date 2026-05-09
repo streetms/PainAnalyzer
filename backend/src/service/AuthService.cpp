@@ -16,15 +16,11 @@
 #include "utils/alias.h"
 #include "service/AuthService.h"
 
+
 namespace ssl = boost::asio::ssl;
 
-
-// std::string AuthService::generate_token() {
-//     unsigned char buf[32];
-//     getrandom(buf, sizeof(buf), 0);
-//
-//     return to_hex(buf, 32);
-// }
+AuthService::AuthService(AuthRepository &authRepository) : authRepository_(authRepository) {
+}
 
 std::string AuthService::getTokenFromTarget(const std::string &target) {
     auto pos = target.find("token=");
@@ -34,7 +30,7 @@ std::string AuthService::getTokenFromTarget(const std::string &target) {
     return target.substr(pos + 6);
 }
 
-net::awaitable<void> AuthService::sendAuthLinkToEmail(const std::string &email) {
+net::awaitable<void> AuthService::sendAuthLinkToEmail(std::string_view email,std::string_view token) {
         auto executor = co_await net::this_coro::executor;
     ssl::context ctx(ssl::context::tlsv12_client);
     ctx.set_default_verify_paths();
@@ -51,7 +47,7 @@ net::awaitable<void> AuthService::sendAuthLinkToEmail(const std::string &email) 
     co_await stream.async_handshake(ssl::stream_base::client, net::use_awaitable);
     std::string link = std::format(
             "http://streetms.ru:5555/auth/verify?token={}",
-            Token<32>::generate().to_string()
+            token
     );
 
     nlohmann::json json{
@@ -70,24 +66,29 @@ net::awaitable<void> AuthService::sendAuthLinkToEmail(const std::string &email) 
     req.set(http::field::content_type, "application/json");
     req.set(http::field::user_agent, "PainAnalyzer");
     auto API_KEY = std::string(std::getenv("RESEND_API_KEY"));
-    std::cout << API_KEY << std::endl;
     req.set("Authorization", "Bearer "+ API_KEY);
 
     req.body() = json.dump();
     req.prepare_payload();
+    try {
+        co_await http::async_write(stream, req, net::use_awaitable);
 
-    co_await http::async_write(stream, req, net::use_awaitable);
+        beast::flat_buffer buffer;
+        http::response<http::string_body> res;
 
-    beast::flat_buffer buffer;
-    http::response<http::string_body> res;
+        co_await http::async_read(stream, buffer, res, net::use_awaitable);
 
-    co_await http::async_read(stream, buffer, res, net::use_awaitable);
-
-    std::cout << res.body() << std::endl;
-
-    beast::error_code ec;
-    stream.shutdown(ec);
+        std::cout << "Status: " << res.result_int() << "\n";
+        std::cout << "Response: " << res.body() << "\n";
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
     co_return;
+}
+
+net::awaitable<void> AuthService::saveAuthToken(std::string_view hash, std::string_view type_id, std::string_view id) {
+    co_await authRepository_.saveAuthToken(hash, type_id, id);
 }
 
 std::string AuthService::to_html_link(std::string_view text, std::string_view link) {
