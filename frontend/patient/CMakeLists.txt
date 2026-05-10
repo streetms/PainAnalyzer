@@ -1,19 +1,20 @@
 project(patient)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+set(CMAKE_ANDROID_ARCH_ABI arm64-v8a)
+
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 find_package(Qt6 REQUIRED COMPONENTS
         Quick
-        Quick3D
-        Core
-        Gui
-        Qml
         QuickControls2
-        Sql
-        Network)
+        Quick3D
+        Network
+        Qml
+)
 set(SRC
         src/main.cpp
         src/PatientManager.cpp
@@ -22,11 +23,17 @@ set(SRC
 set(HEADERS
         src/PatientManager.h
 )
-
-set(QML_FILES
+set(QT_ANDROID_DEPLOYMENT_TYPE Minimal)
+## Создаём Qt-приложение
+qt_add_executable(patient ${SRC} ${HEADERS}  resource.qrc)
+qt_add_qml_module(patient
+        URI Patient
+        VERSION 1.0
+        RESOURCE_PREFIX /qt/qml
+        QML_FILES
         qml/App.qml
         qml/AutorizationForms/FIO.qml
-        qml/AutorizationForms/Phone.qml
+        qml/AutorizationForms/Email.qml
         qml/AutorizationForms/BaseInfo.qml
         qml/Screen01.qml
         qml/HeadScreen.qml
@@ -38,10 +45,12 @@ set(QML_FILES
         qml/PainTypeScreen.qml
         qml/DrugScreen.qml
         qml/AurasScreen.qml
+        qml/Menu.qml
+        qml/History.qml
 )
-
-# Создаём Qt-приложение
-qt_add_executable(patient ${SRC} ${HEADERS} ${QML_FILES})
+set_target_properties(patient PROPERTIES
+        QT_QMLCACHEGEN TRUE
+)
 
 # Подключаем core как библиотеку
 target_link_libraries(patient
@@ -53,17 +62,10 @@ target_link_libraries(patient
         Qt6::Gui
         Qt6::Qml
         Qt6::QuickControls2
-        Qt6::Sql
         Qt6::Network
 )
 
-# Настраиваем пути поиска и ресурс QML
-qt_add_resources(patient "qml_files"
-        PREFIX "/patient"                # важно: должен совпадать с qrc:/patient
-        BASE "qml"
-        FILES ${QML_FILES}
-        resource.qrc
-)
+
 
 #Если используешь CMake < 3.21 — можно вручную прописать ресурсы
 #set_target_properties(patient PROPERTIES AUTOMOC ON)#

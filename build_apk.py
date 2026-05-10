@@ -225,6 +225,7 @@ DEFAULT_CONFIG = {
             "ANDROID_ABI": "arm64-v8a",
             "ANDROID_PLATFORM": "android-35",
             "CMAKE_PREFIX_PATH": "",
+            "QT_ANDROID_MIN_SDK_VERSION": "24",
             "CMAKE_FIND_ROOT_PATH_MODE_PACKAGE": "BOTH",
             "QT_ANDROID_BUILD_TOOLS_REVISION": "35.0.0",
             "BUILD_FRONTEND": "ON"

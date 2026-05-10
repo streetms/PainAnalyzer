@@ -15,9 +15,9 @@ ApplicationWindow {
     StackView {
         id: stack
         anchors.fill: parent
-        //initialItem: Screen01{}
-        initialItem: Phone {
-        }
+         // initialItem: Screen01{}
+        initialItem:
+            "Menu.qml"
     }
 
     function goBack() {
@@ -32,6 +32,10 @@ ApplicationWindow {
         switch (key) {
             case "Record": {
                 stack.push(Qt.resolvedUrl("Screen01.qml"));
+                break
+            }
+            case "History":{
+                stack.push(Qt.resolvedUrl("History.qml"));
                 break
             }
             case "type":
@@ -76,9 +80,13 @@ ApplicationWindow {
         function onOpenRequested(key) {
             openScreen(key)
         }
-        function onBackRequested(){
+
+        function onBackRequested() {
             console.log("clicked")
             goBack()
+        }
+        function onAddEntryClicked(){
+            stack.push("AutorizationForms/FIO.qml")
         }
     }
 }

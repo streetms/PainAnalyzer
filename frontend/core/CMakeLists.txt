@@ -11,8 +11,7 @@ find_package(Qt6 REQUIRED COMPONENTS
         Core
         Gui
         Qml
-        QuickControls2
-        Sql)
+        QuickControls2)
 
 # Заголовки и исходники
 set(CORE_SOURCES
@@ -40,7 +39,7 @@ target_link_libraries(core
         Qt6::Gui
         Qt6::Qml
         Qt6::QuickControls2
-        Qt6::Sql
+        nlohmann_json::nlohmann_json
 )
 
 # Подключаем include директорию
