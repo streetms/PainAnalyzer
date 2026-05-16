@@ -1,18 +1,17 @@
 #include <iostream>
-#include <dotenv.h>
 #include "service/AuthService.h"
 #include "http/Router.h"
 #include "http/Server.h"
 #include "app/AppContext.h"
 #include "http/routes/RegisterRoutes.h"
-
+#include "utils/load_dotenv.h"
 void router_setup(Router& router, AppContext& ctx) {
     routes::registerAuthRoutes(router,ctx.authHandler);
 }
 
 int main()
 {
-    dotenv::env.load_dotenv();
+    load_dotenv();
 
     net::io_context ioc;
 

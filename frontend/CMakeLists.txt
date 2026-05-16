@@ -1,2 +1,10 @@
+if (ANDROID)
+    set(CONAN_PROFILE ${CMAKE_SOURCE_DIR}/conan_profiles/android-arm64)
+    message(----------${CONAN_PROFILE}------------)
+endif()
+#message(CONAN=${CONAN_CMD})
+include(${CMAKE_SOURCE_DIR}/cmake/conan_bootstrap.cmake)
+find_package(nlohmann_json)
+
 add_subdirectory(core)
 add_subdirectory(patient)

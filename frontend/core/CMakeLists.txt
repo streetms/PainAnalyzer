@@ -32,7 +32,6 @@ add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS})
 # Подключаем Qt
 target_link_libraries(core
         PUBLIC
-        common
         Qt6::Quick
         Qt6::Quick3D
         Qt6::Core
@@ -45,4 +44,5 @@ target_link_libraries(core
 # Подключаем include директорию
 target_include_directories(core
         PUBLIC include
+        ${CMAKE_SOURCE_DIR}/common/include
 )

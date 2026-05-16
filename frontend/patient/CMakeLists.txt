@@ -15,6 +15,7 @@ find_package(Qt6 REQUIRED COMPONENTS
         Network
         Qml
 )
+
 set(SRC
         src/main.cpp
         src/PatientManager.cpp
@@ -57,7 +58,7 @@ set_target_properties(patient PROPERTIES
 
 # Подключаем core как библиотеку
 target_link_libraries(patient
-        PRIVATE core common
+        PRIVATE core
         PRIVATE
         Qt6::Quick
         Qt6::Quick3D
@@ -66,6 +67,7 @@ target_link_libraries(patient
         Qt6::Qml
         Qt6::QuickControls2
         Qt6::Network
+        nlohmann_json::nlohmann_json
 )
 
 
