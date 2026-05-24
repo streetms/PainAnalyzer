@@ -1,16 +1,24 @@
 #include <iostream>
+#include <stacktrace>
 #include "service/AuthService.h"
 #include "http/Router.h"
 #include "http/Server.h"
 #include "app/AppContext.h"
 #include "http/routes/RegisterRoutes.h"
 #include "utils/load_dotenv.h"
+void my_terminate_handler()
+{
+    std::cerr << "Unhandled exception!\n";
+    std::cerr << std::stacktrace::current() << std::endl;
+    std::_Exit(1);
+}
 void router_setup(Router& router, AppContext& ctx) {
     routes::registerAuthRoutes(router,ctx.authHandler);
 }
 
 int main()
 {
+    std::set_terminate(my_terminate_handler);
     load_dotenv();
 
     net::io_context ioc;
@@ -21,9 +29,9 @@ int main()
     router_setup(*router, *ctx);
 
     std::make_shared<Server>(
-        ioc,
-        tcp::endpoint(tcp::v4(), 5555),
-        router
+    ioc,
+    tcp::endpoint(tcp::v4(), 5555),
+    router
     )->run();
 
     std::cout << "Server started on port 5555\n";
@@ -35,5 +43,7 @@ int main()
         });
     }
 
-    for (auto& t : threads) t.join();
+    for (auto& t : threads) {
+        t.join();
+    }
 }
