@@ -10,7 +10,8 @@ class MyProjectConan(ConanFile):
     requires = (
         "boost/1.90.0",
         "libpqxx/8.0.1",
-        "nlohmann_json/3.12.0"
+        "nlohmann_json/3.12.0",
+        "jwt-cpp/0.7.0"
     )
 
     generators = ("CMakeToolchain", "CMakeDeps")
