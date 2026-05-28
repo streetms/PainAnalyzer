@@ -4,6 +4,7 @@
 #include <queue>
 #include <thread>
 #include <pqxx/pqxx>
+
 namespace db {
     class ConnectionPool;
 

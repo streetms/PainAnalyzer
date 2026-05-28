@@ -1,6 +1,8 @@
 #pragma once
 #include "utils/alias.h"
 #include "service/AuthService.h"
+#include "database/repositories/IdentityRepository.h"
+
 class AuthHandler {
 public:
     net::awaitable<Response> registerUser(Request req);
@@ -8,5 +10,8 @@ public:
     AuthHandler(AuthService& authService);
 private:
     AuthService& auth_;
+
+
+
 };
 

@@ -12,10 +12,10 @@ configure_file(
 )
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-find_package(Boost REQUIRED )
+find_package(Boost REQUIRED)
 find_package(libpqxx REQUIRED)
-find_package(jwt-cpp CONFIG REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(jwt-cpp CONFIG REQUIRED)
 set(SRC
         src/main.cpp
         src/http/Server.cpp
@@ -23,17 +23,28 @@ set(SRC
         src/http/Session.cpp
         src/http/Router.cpp
         src/handlers/AuthHandlers.cpp
-        src/database/repositories/AuthRepository.cpp
+        include/http/Server.h
+        include/database/Database.h
+        include/service/AuthService.h
+        include/http/Session.h
+        include/http/Router.h
+        include/handlers/AuthHandlers.h
+        include/database/ConnectionPool.h
         src/database/ConnectionPool.cpp
+        include/http/routes/RegisterRoutes.h
         src/http/routes/RegisterRoutes.cpp
         src/utils/load_dotenv.cpp
+        include/database/repositories/IdentityRepository.h
+        src/database/repositories/IdentityRepository.cpp
+        include/database/repositories/TokenRepository.h
+        src/database/repositories/TokenRepository.cpp
 )
 
 add_executable(PainAnalyzerServer ${SRC})
 target_link_libraries(PainAnalyzerServer
+        Boost::headers
         libpqxx::pqxx
         nlohmann_json::nlohmann_json
-        Boost::headers
         jwt-cpp::jwt-cpp
         stdc++_libbacktrace
         stdc++exp

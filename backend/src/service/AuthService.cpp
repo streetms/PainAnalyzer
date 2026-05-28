@@ -19,8 +19,7 @@
 
 namespace ssl = boost::asio::ssl;
 
-AuthService::AuthService(AuthRepository &authRepository) : authRepository_(authRepository) {
-}
+
 
 std::string AuthService::getTokenFromTarget(const std::string &target) {
     auto pos = target.find("token=");
@@ -28,6 +27,21 @@ std::string AuthService::getTokenFromTarget(const std::string &target) {
         return "";
 
     return target.substr(pos + 6);
+}
+
+net::awaitable<void> AuthService::insertMagicLinkToken(pqxx::bytes token_hash, std::string_view identity_type,
+    std::string_view identifier) {
+    try {
+        co_await db_.run([&](pqxx::work& tx) {
+            auto identity_id = identityRepository_.insertIdentity(tx,identity_type, identifier);
+            std::chrono::seconds  ttl_seconds = std::chrono::minutes(15);
+            auto token_id = tokenRepository_.insertToken(tx,token_hash, ttl_seconds.count() );
+            tokenRepository_.insertMagicLink(tx,token_id, identity_id,"register");}
+        );
+    } catch (std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+    co_return;
 }
 
 net::awaitable<void> AuthService::sendAuthLinkToEmail(std::string_view email,std::string_view token) {
@@ -87,8 +101,8 @@ net::awaitable<void> AuthService::sendAuthLinkToEmail(std::string_view email,std
     co_return;
 }
 
-net::awaitable<void> AuthService::saveAuthToken(std::string_view hash, std::string_view type_id, std::string_view id) {
-    co_await authRepository_.saveAuthToken(hash, type_id, id);
+net::awaitable<void> AuthService::createUser(std::string_view hash, std::string_view type_id, std::string_view id) {
+
 }
 
 std::string AuthService::to_html_link(std::string_view text, std::string_view link) {

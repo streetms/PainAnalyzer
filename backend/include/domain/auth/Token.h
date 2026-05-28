@@ -8,6 +8,7 @@
 #include <string>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
+#include <pqxx/pqxx>
 
 template <size_t N>
 struct Token {
@@ -21,8 +22,9 @@ private:
     static constexpr size_t base64_padding(size_t n) {
         return (3 - (n % 3)) % 3;
     }
-    std::array<uint8_t, N> bytes;
+
 public:
+    std::array<uint8_t, N> bytes;
     static constexpr size_t base64url_length =
     base64_encoded_length(N) - base64_padding(N);
 
@@ -88,8 +90,13 @@ struct TokenHash {
     template <size_t N>
     static TokenHash hash(const Token<N>& t) {
         TokenHash h;
-        SHA256(t.bytes.data(), t.bytes.size(), h.bytes.data());
+        SHA256((t.bytes.data()), t.bytes.size(), (h.bytes.data()));
         return h;
+    }
+    [[nodiscard]] pqxx::bytes to_pqxx ()const {
+        pqxx::bytes out(bytes.size());
+        memcpy(out.data(), reinterpret_cast<const unsigned char* >(bytes.data()), bytes.size());
+        return out;
     }
     bool operator==(const TokenHash& other) const {
         return bytes == other.bytes;

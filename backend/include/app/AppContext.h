@@ -6,27 +6,27 @@
 #include <memory>
 #include "database/ConnectionPool.h"
 #include "database/Database.h"
-#include "database/repositories/AuthRepository.h"
 #include "handlers/AuthHandlers.h"
 #include "service/AuthService.h"
-
+#include "database/repositories/TokenRepository.h"
+#include "database/repositories/IdentityRepository.h"
 struct AppContext {
     AppContext( net::io_context& ioc,size_t connectionPoolSize, size_t threadPoolSize) :
     ioc_(ioc),
     threadPool_(threadPoolSize),
     connectionPool_("",connectionPoolSize),
     db_(threadPool_,connectionPool_),
-    authRepository_(db_),
-    authService_(authRepository_),
+    authService_(db_),
     authHandler(authService_){
     }
-    AuthHandler authHandler;
+
 private:
     net::io_context& ioc_;
     db::Database db_;
     net::thread_pool threadPool_;
     db::ConnectionPool connectionPool_;
-    AuthRepository authRepository_;
     AuthService authService_;
+public:
+    AuthHandler authHandler;
 };
 

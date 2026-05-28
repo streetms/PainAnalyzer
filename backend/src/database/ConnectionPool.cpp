@@ -1,5 +1,7 @@
 #include "database/ConnectionPool.h"
 #include "database/queries.hpp"
+#include "database/repositories/IdentityRepository.h"
+#include "database/repositories/TokenRepository.h"
 namespace db {
     ConnectionGuard::ConnectionGuard(ConnectionGuard &&other) noexcept
             : conn_(other.conn_), pool_(other.pool_) {
@@ -60,7 +62,9 @@ namespace db {
     }
 
     void ConnectionPool::prepareStatements(pqxx::connection *conn) {
-        conn->prepare("create_auth_token",     sql::auth::create_auth_token);
-        conn->prepare("create_user_identities", sql::auth::create_user_identities);
+        IdentityRepository::prepare(conn);
+        TokenRepository::prepare(conn);
+        // conn->prepare("create_auth_token",     sql::auth::create_auth_token);
+        // conn->prepare("create_user_identities", sql::auth::create_user_identities);
     }
 }

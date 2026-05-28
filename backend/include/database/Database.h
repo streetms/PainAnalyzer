@@ -9,20 +9,22 @@ namespace db {
 
         template<typename Func>
         auto run(Func fn)
-            -> net::awaitable<decltype(fn(std::declval<pqxx::connection&>()))>
+            -> net::awaitable<decltype(fn(std::declval<pqxx::work&>()))>
         {
-            using Result = decltype(fn(std::declval<pqxx::connection&>()));
+            using Result = decltype(fn(std::declval<pqxx::work&>()));
 
             auto fut = net::co_spawn(
                 pool_,
                 [this, fn = std::move(fn)]() -> net::awaitable<Result> {
                     auto conn = conn_pool_.acquire();
-
+                    pqxx::work tx(*conn);
                     if constexpr (std::is_void_v<Result>) {
-                        fn(*conn);
+                        fn(tx);
                         co_return;
                     } else {
-                        co_return fn(*conn);
+                        auto res = fn(tx);
+                        tx.commit();
+                        co_return res;
                     }
                 },
                 net::use_future
