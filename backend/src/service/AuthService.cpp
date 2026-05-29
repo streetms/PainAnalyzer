@@ -46,7 +46,7 @@ net::awaitable<void> AuthService::insertMagicLinkToken(pqxx::bytes token_hash, s
 
 net::awaitable<void> AuthService::sendAuthLinkToEmail(std::string_view email,std::string_view token) {
         auto executor = co_await net::this_coro::executor;
-    ssl::context ctx(ssl::context::tlsv12_client);
+ ssl::context ctx(ssl::context::tlsv12_client);
     ctx.set_default_verify_paths();
     ctx.set_verify_mode(ssl::verify_peer);
 
@@ -60,19 +60,22 @@ net::awaitable<void> AuthService::sendAuthLinkToEmail(std::string_view email,std
     co_await beast::get_lowest_layer(stream).async_connect(results, net::use_awaitable);
     co_await stream.async_handshake(ssl::stream_base::client, net::use_awaitable);
     std::string link = std::format(
-            "http://streetms.ru:5555/auth/verify?token={}",
+            "https://streetms.ru/auth/verify?token={}",
             token
     );
 
     nlohmann::json json{
-            {"from", "PainAnalyzer <onboarding@resend.dev>"},
+            {"from", "PainAnalyzer <noreply@mail.streetms.ru>"},
             {"to", nlohmann::json::array({email})},
             {"subject", "Авторизация PainAnalyzer"},
             {"html",std::format("Перейдите по {}, чтобы войти в свою учетную запись\n"
-                                 "Срок действия этой ссылки истечет через 10 минут.\n"
+                                 "Срок действия этой ссылки истечет через 15 минут.\n"
                                  "\n"
                                  "Если вы не запрашивали это электронное письмо, вы можете проигнорировать его.",
-                                 to_html_link("ссылке",link))}
+                                 to_html_link("ссылке",link))},
+            {"tracking", {
+                        {"clicks", false}
+                }}
     };
 
     http::request<http::string_body> req{http::verb::post, "/emails", 11};
