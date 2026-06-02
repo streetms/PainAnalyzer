@@ -117,7 +117,7 @@ Popup {
 
             Button {
                 text: "Подтвердить"
-                onClicked: root.confirmed(root.selectedText)
+                onClicked: confirmed(root.selectedText)
             }
         }
     }

@@ -100,9 +100,10 @@ Item {
             }
 
             onClicked: {
-                PatientManager.setEmail(email.text)
+                // PatientManager.setEmail(email.text)
+                // PatientManager.registerPatient()
                 //Patient.setPhone(email.text)
-                root.openRequested("FIO")
+                root.openRequested("Menu")
             }
         }
     }

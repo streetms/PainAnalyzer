@@ -19,7 +19,6 @@ void router_setup(Router& router, AppContext& ctx) {
 int main()
 {
     try {
-        // std::set_terminate(my_terminate_handler);
         load_dotenv();
 
         net::io_context ioc;

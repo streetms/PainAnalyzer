@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+import PainAnalyzer 1.0
 Page {
     id: page
     // focus: true
@@ -26,7 +26,7 @@ Page {
         ]
 
         onConfirmed: (text) => {
-            currentRecord.setTriggers(text)
+            PatientManager.setAuras(text)
             dlg.close()
             Qt.callLater(() => page.StackView.view.pop())
         }

@@ -1,11 +1,21 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick 6.11
+import QtQuick.Controls 6.11
+import QtQuick.Controls.Material 6.11
+import Shared 1.0
 import "AutorizationForms"
+import PainAnalyzer 1.0
 ApplicationWindow {
     width: 800
     height: 600
     visible: true
     id: win
+    Snackbar {
+        id: snackbar
+    }
+
+    // Component.onCompleted: {
+    //     snackbar.show("Hello!")
+    // }
     Component.onCompleted: {
         console.log("stack:", stack)
         console.log("Initial item:", stack.initialItem ? stack.initialItem : "null")
@@ -17,7 +27,7 @@ ApplicationWindow {
         anchors.fill: parent
          // initialItem: Screen01{}
         initialItem:
-            "Menu.qml"
+            "AutorizationForms/Email.qml"
     }
 
     function goBack() {
@@ -30,6 +40,10 @@ ApplicationWindow {
 
     function openScreen(key) {
         switch (key) {
+            case "Menu": {
+                stack.push(Qt.resolvedUrl("Menu.qml"));
+                break
+            }
             case "Record": {
                 stack.push(Qt.resolvedUrl("Screen01.qml"));
                 break
@@ -64,8 +78,8 @@ ApplicationWindow {
                 stack.push(Qt.resolvedUrl("AutorizationForms/FIO.qml"));
                 break
             }
-            case "Phone": {
-                stack.push(Qt.resolvedUrl("AutorizationForms/Phone.qml"));
+            case "Email": {
+                stack.push(Qt.resolvedUrl("AutorizationForms/Email.qml"));
                 break
             }
             default:
@@ -87,6 +101,12 @@ ApplicationWindow {
         }
         function onAddEntryClicked(){
             stack.push("AutorizationForms/FIO.qml")
+        }
+    }
+    Connections {
+        target: PatientManager
+        function onErrorOccurred(message) {
+            snackbar.show(message)
         }
     }
 }

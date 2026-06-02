@@ -1,20 +1,14 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+import PainAnalyzer 1.0
 Page {
     id: page
-    // focus: true
-    // Component.onCompleted: page.forceActiveFocus()
-
-    // Keys.onBackPressed: (event) => { event.accepted = true; goBack() }
-    // Keys.onEscapePressed: (event) => { event.accepted = true; goBack() }
-    //
     Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
     Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
     SelectionDialog {
         id: dlg
-        parent: Overlay.overlay   // важно: не page.Window.overlay
+        parent: Overlay.overlay
 
         options: [
             {text: "прикосновение к лицу"},
@@ -31,9 +25,8 @@ Page {
             {text: "голод"},
             {text: "перемена погоды"}
         ]
-
-        onConfirmed: (text) => {
-            currentRecord.setTriggers(text)
+        onConfirmed: (items) => {
+            PatientManager.setTriggers(items)
             dlg.close()
             Qt.callLater(() => page.StackView.view.pop())
         }

@@ -1,4 +1,4 @@
-project(core LANGUAGES CXX)
+project(. LANGUAGES CXX)
 
 
 set(CMAKE_AUTOMOC ON)
@@ -15,15 +15,18 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 # Заголовки и исходники
 set(CORE_SOURCES
-        src/network/ApiClient.cpp
-        src/user/UserManager.cpp
-        src/network/AuthManager.cpp
+        src/infrastructure/network/ApiClient.cpp
+        src/application/AuthService.cpp
 )
 
 set(CORE_HEADERS
-        include/network/ApiClient.h
-        include/user/UserManager.h
-        include/network/AuthManager.h
+        include/core/infrastructure/network/ApiClient.h
+        include/core/application/AuthService.h
+        src/infrastructure/AuthRepository.cpp
+        include/core/infrastructure/AuthRepository.h
+        src/presentation/AuthManager.cpp
+        include/core/presentation/AuthManager.h
+        include/core/presentation/UiExecutor.h
 )
 
 # Создаём библиотеку

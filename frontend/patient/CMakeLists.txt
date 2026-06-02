@@ -18,11 +18,15 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 set(SRC
         src/main.cpp
-        src/PatientManager.cpp
+        src/presentation/PatientManager.cpp
 )
 
 set(HEADERS
-        src/PatientManager.h
+        include/presentation/PatientManager.h
+        src/infrastructure/PatientRepository.cpp
+        include/infrastructure/PatientRepository.h
+        src/application/PatientService.cpp
+        include/application/PatientService.h
 )
 set(QT_ANDROID_DEPLOYMENT_TYPE Minimal)
 ## Создаём Qt-приложение
@@ -59,6 +63,7 @@ set_target_properties(patient PROPERTIES
 # Подключаем core как библиотеку
 target_link_libraries(patient
         PRIVATE core
+        shared_ui
         PRIVATE
         Qt6::Quick
         Qt6::Quick3D
@@ -70,7 +75,9 @@ target_link_libraries(patient
         nlohmann_json::nlohmann_json
 )
 
-
+target_include_directories(patient PRIVATE
+        include
+)
 
 #Если используешь CMake < 3.21 — можно вручную прописать ресурсы
 #set_target_properties(patient PROPERTIES AUTOMOC ON)#

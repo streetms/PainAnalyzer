@@ -38,6 +38,7 @@ set(SRC
         src/database/repositories/IdentityRepository.cpp
         include/database/repositories/TokenRepository.h
         src/database/repositories/TokenRepository.cpp
+        ../common/include/models/PainEpisode.h
 )
 
 add_executable(PainAnalyzerServer ${SRC})
