@@ -1,5 +1,5 @@
 #pragma once
-#include "database/ConnectionPool.h"
+#include "infrastructure/database/ConnectionPool.h"
 #include "utils/alias.h"
 namespace db {
     class Database {

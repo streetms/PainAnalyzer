@@ -18,26 +18,26 @@ find_package(nlohmann_json REQUIRED)
 find_package(jwt-cpp CONFIG REQUIRED)
 set(SRC
         src/main.cpp
-        src/http/Server.cpp
-        src/service/AuthService.cpp
-        src/http/Session.cpp
-        src/http/Router.cpp
-        src/handlers/AuthHandlers.cpp
-        include/http/Server.h
-        include/database/Database.h
-        include/service/AuthService.h
-        include/http/Session.h
-        include/http/Router.h
-        include/handlers/AuthHandlers.h
-        include/database/ConnectionPool.h
-        src/database/ConnectionPool.cpp
-        include/http/routes/RegisterRoutes.h
-        src/http/routes/RegisterRoutes.cpp
+        src/infrastructure/http/Server.cpp
+        src/modules/auth/AuthService.cpp
+        src/infrastructure/http/Session.cpp
+        src/infrastructure/http/Router.cpp
+        src/modules/auth/AuthHandlers.cpp
+        include/infrastructure/http/Server.h
+        include/infrastructure/database/Database.h
+        include/modules/auth/AuthService.h
+        include/infrastructure/http/Session.h
+        include/infrastructure/http/Router.h
+        include/modules/auth/AuthHandlers.h
+        include/infrastructure/database/ConnectionPool.h
+        src/infrastructure/database/ConnectionPool.cpp
+        include/infrastructure/http/routes/RegisterRoutes.h
+        src/infrastructure/http/routes/RegisterRoutes.cpp
         src/utils/load_dotenv.cpp
-        include/database/repositories/IdentityRepository.h
-        src/database/repositories/IdentityRepository.cpp
-        include/database/repositories/TokenRepository.h
-        src/database/repositories/TokenRepository.cpp
+        include/infrastructure/database/repositories/IdentityRepository.h
+        src/infrastructure/database/repositories/IdentityRepository.cpp
+        include/infrastructure/database/repositories/TokenRepository.h
+        src/infrastructure/database/repositories/TokenRepository.cpp
         ../common/include/models/PainEpisode.h
 )
 

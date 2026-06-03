@@ -1,7 +1,6 @@
-#include "database/ConnectionPool.h"
-#include "database/queries.hpp"
-#include "database/repositories/IdentityRepository.h"
-#include "database/repositories/TokenRepository.h"
+#include "infrastructure/database/ConnectionPool.h"
+#include "infrastructure/database/repositories/IdentityRepository.h"
+#include "infrastructure/database/repositories/TokenRepository.h"
 namespace db {
     ConnectionGuard::ConnectionGuard(ConnectionGuard &&other) noexcept
             : conn_(other.conn_), pool_(other.pool_) {

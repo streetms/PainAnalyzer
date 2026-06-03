@@ -5,10 +5,9 @@
 #ifndef PAINAPP_REGISTERROUTES_H
 #define PAINAPP_REGISTERROUTES_H
 #include "app/AppContext.h"
-#include "handlers/AuthHandlers.h"
+#include "modules/auth/AuthHandlers.h"
 
-#include "http/Router.h"
-#include "service/AuthService.h"
+#include "infrastructure/http/Router.h"
 namespace routes {
     void registerAuthRoutes(Router& router, AuthHandler& handler);
 }

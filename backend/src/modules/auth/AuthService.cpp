@@ -12,9 +12,9 @@
 #include <iostream>
 #include <format>
 
-#include "domain/auth/Token.h"
+#include "infrastructure/domain/Token.h"
 #include "utils/alias.h"
-#include "service/AuthService.h"
+#include "modules/auth/AuthService.h"
 
 
 namespace ssl = boost::asio::ssl;
@@ -36,7 +36,7 @@ net::awaitable<void> AuthService::insertMagicLinkToken(pqxx::bytes token_hash, s
             auto identity_id = identityRepository_.insertIdentity(tx,identity_type, identifier);
             std::chrono::seconds  ttl_seconds = std::chrono::minutes(15);
             auto token_id = tokenRepository_.insertToken(tx,token_hash, ttl_seconds.count() );
-            tokenRepository_.insertMagicLink(tx,token_id, identity_id,"register");}
+            tokenRepository_.insertMagicLink(tx,token_id, identity_id,"register_patient");}
         );
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;

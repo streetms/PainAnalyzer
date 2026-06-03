@@ -4,12 +4,10 @@
 
 #pragma once
 #include <memory>
-#include "database/ConnectionPool.h"
-#include "database/Database.h"
-#include "handlers/AuthHandlers.h"
-#include "service/AuthService.h"
-#include "database/repositories/TokenRepository.h"
-#include "database/repositories/IdentityRepository.h"
+#include "infrastructure/database/ConnectionPool.h"
+#include "infrastructure/database/Database.h"
+#include "modules/auth/AuthHandlers.h"
+#include "modules/auth/AuthService.h"
 struct AppContext {
     AppContext( net::io_context& ioc,size_t connectionPoolSize, size_t threadPoolSize) :
     ioc_(ioc),

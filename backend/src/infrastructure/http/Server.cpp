@@ -2,8 +2,8 @@
 // Created by konstantin on 11.04.2026.
 //
 
-#include "../../include/http/Server.h"
-#include "../../include/http/Session.h"
+#include "infrastructure/http/Server.h"
+#include "infrastructure/http/Session.h"
 Server::Server(net::io_context &ioc, tcp::endpoint endpoint,std::shared_ptr<Router> router)
         : acceptor_(ioc), socket_(ioc),router_(router)
 {

@@ -4,7 +4,7 @@
 
 #ifndef PAINAPP_IDENTITIYREPOSITORY_H
 #define PAINAPP_IDENTITIYREPOSITORY_H
-#include "database/Database.h"
+#include "infrastructure/database/Database.h"
 
 class IdentityRepository {
 

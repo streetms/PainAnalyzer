@@ -2,7 +2,7 @@
 // Created by konstantin on 26.05.2026.
 //
 
-#include "database/repositories/TokenRepository.h"
+#include "infrastructure/database/repositories/TokenRepository.h"
 
 
 namespace {

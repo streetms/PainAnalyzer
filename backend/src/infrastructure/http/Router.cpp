@@ -2,7 +2,7 @@
 // Created by konstantin on 15.04.2026.
 //
 
-#include "../../include/http/Router.h"
+#include "infrastructure/http/Router.h"
 
 void Router::add(const std::string &path, handler_t handler) {
     routes_[path] = std::move(handler);

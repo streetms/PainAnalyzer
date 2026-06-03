@@ -2,7 +2,7 @@
 // Created by konstantin on 26.05.2026.
 //
 
-#include "database/repositories/IdentityRepository.h"
+#include "infrastructure/database/repositories/IdentityRepository.h"
 
 #include <iostream>
 

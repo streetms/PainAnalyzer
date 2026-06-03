@@ -1,10 +1,10 @@
 #include <iostream>
 #include <stacktrace>
-#include "service/AuthService.h"
-#include "http/Router.h"
-#include "http/Server.h"
+#include "../include/modules/auth/AuthService.h"
+#include "infrastructure/http/Router.h"
+#include "infrastructure/http/Server.h"
 #include "app/AppContext.h"
-#include "http/routes/RegisterRoutes.h"
+#include "infrastructure/http/routes/RegisterRoutes.h"
 #include "utils/load_dotenv.h"
 void my_terminate_handler()
 {
