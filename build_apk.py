@@ -22,6 +22,7 @@ DEFAULT_CONFIG = {
     "install": True,
     "auto_sign_release": True,
     "cmake_defines_common": {
+        "CONAN_TOOLCHAIN:": "conan_profiles/android-arm64",
         "CONAN_CMD": "",
         "QT_HOST_PATH": "",
         "QT_ANDROID_SDK_ROOT": "",

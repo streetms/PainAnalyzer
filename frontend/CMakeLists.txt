@@ -1,11 +1,6 @@
-if (ANDROID)
-    set(CONAN_PROFILE ${CMAKE_SOURCE_DIR}/conan_profiles/android-arm64)
-endif()
-if (LINUX)
-    set(CONAN_PROFILE ${CMAKE_SOURCE_DIR}/conan_profiles/linux-gcc15)
-endif ()
-#message(CONAN=${CONAN_CMD})
-include(${CMAKE_SOURCE_DIR}/cmake/conan_bootstrap.cmake)
+#include(${CMAKE_SOURCE_DIR}/cmake/conan_bootstrap.cmake)
+#project(PainAnalyzerPatient)
+
 find_package(nlohmann_json)
 
 add_subdirectory(libs/core)

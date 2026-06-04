@@ -1,10 +1,4 @@
 cmake_minimum_required(VERSION 3.25)
-set(CONAN_PROFILE ${CMAKE_SOURCE_DIR}/conan_profiles/linux-gcc15)
-include(${CMAKE_SOURCE_DIR}/cmake/conan_bootstrap.cmake)
-
-project(PainAnalyzerServer)
-
-
 configure_file(
         ${CMAKE_SOURCE_DIR}/.env
         ${CMAKE_CURRENT_BINARY_DIR}/.env
@@ -39,6 +33,10 @@ set(SRC
         include/infrastructure/database/repositories/TokenRepository.h
         src/infrastructure/database/repositories/TokenRepository.cpp
         ../common/include/models/PainEpisode.h
+        src/modules/pain/PainEpisodeHandlers.cpp
+        include/modules/pain/PainEpisodeHandlers.h
+        src/modules/pain/PainEpisodeService.cpp
+        include/modules/pain/PainEpisodeService.h
 )
 
 add_executable(PainAnalyzerServer ${SRC})

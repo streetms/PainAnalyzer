@@ -62,9 +62,9 @@ set_target_properties(patient PROPERTIES
 
 # Подключаем core как библиотеку
 target_link_libraries(patient
-        PRIVATE core
-        shared_ui
         PRIVATE
+        core
+        shared_ui
         Qt6::Quick
         Qt6::Quick3D
         Qt6::Core
@@ -74,10 +74,13 @@ target_link_libraries(patient
         Qt6::Network
         nlohmann_json::nlohmann_json
 )
-
+if(ANDROID)
+    set_property(TARGET patient APPEND PROPERTY
+            QT_ANDROID_EXTRA_LIBS
+            "/home/konstantin/.conan2/p/b/opens2e5dd1f490a3c/p/lib/libssl.so"
+            "/home/konstantin/.conan2/p/b/opens2e5dd1f490a3c/p/lib/libcrypto.so"
+    )
+endif()
 target_include_directories(patient PRIVATE
         include
 )
-
-#Если используешь CMake < 3.21 — можно вручную прописать ресурсы
-#set_target_properties(patient PROPERTIES AUTOMOC ON)#

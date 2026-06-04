@@ -1,6 +1,3 @@
-project(. LANGUAGES CXX)
-
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -12,6 +9,7 @@ find_package(Qt6 REQUIRED COMPONENTS
         Gui
         Qml
         QuickControls2)
+find_package(OpenSSL REQUIRED)
 
 # Заголовки и исходники
 set(CORE_SOURCES
@@ -30,7 +28,8 @@ set(CORE_HEADERS
 )
 
 # Создаём библиотеку
-add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS})
+add_library(core SHARED ${CORE_SOURCES} ${CORE_HEADERS})
+
 
 # Подключаем Qt
 target_link_libraries(core
@@ -42,7 +41,33 @@ target_link_libraries(core
         Qt6::Qml
         Qt6::QuickControls2
         nlohmann_json::nlohmann_json
+        OpenSSL::SSL
+        OpenSSL::Crypto
 )
+set_target_properties(core PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/patched_libs/${CMAKE_ANDROID_ARCH_ABI}"
+)
+message(-------
+        ${CMAKE_BINARY_DIR}/patched_libs/${CMAKE_ANDROID_ARCH_ABI}
+        --------)
+if(ANDROID)
+  get_target_property(PATIENT_LIBS core LINK_LIBRARIES)
+  message(STATUS "CORE_LIBS = ${PATIENT_LIBS}")
+  find_program(PATCHELF_EXECUTABLE patchelf)
+  if(PATCHELF_EXECUTABLE)
+    add_custom_target(patch_core_openssl ALL
+      COMMAND ${PATCHELF_EXECUTABLE}
+        --replace-needed libssl.so.3 libssl.so
+        "${CMAKE_BINARY_DIR}/patched_libs/${CMAKE_ANDROID_ARCH_ABI}/$<TARGET_FILE_NAME:core>"
+      COMMAND ${PATCHELF_EXECUTABLE}
+        --replace-needed libcrypto.so.3 libcrypto.so
+        "${CMAKE_BINARY_DIR}/patched_libs/${CMAKE_ANDROID_ARCH_ABI}/$<TARGET_FILE_NAME:core>"
+      DEPENDS core
+    )
+  endif()
+endif()
+
+
 
 # Подключаем include директорию
 target_include_directories(core
