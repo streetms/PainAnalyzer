@@ -1,7 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import PainAnalyzer 1.0
 Page {
+    Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
+    Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
     property bool selectionMode: true
     id: page
     // anchors.fill: parent
@@ -98,36 +101,34 @@ Page {
 
                         Slider {
                             id: painSlider
-                            anchors.fill: track            // чтобы геометрия совпала с дорожкой
+                            anchors.fill: track
+
                             from: 0
                             to: 10
                             stepSize: 1
                             value: 5
 
-                            // убираем свой фон, используем внешний track
                             background: Item { }
-
-                            // важно: даём Slider'у правильную высоту
                             implicitHeight: track.height
 
                             handle: Rectangle {
+                                width: 24
                                 height: 24
                                 radius: 12
                                 color: "#E00000"
                                 border.width: 1
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.leftMargin: 274
-                                anchors.rightMargin: 274
                                 border.color: "#B3000059"
 
-                                // ДВИЖЕНИЕ РУЧКИ:
+                                y: (parent.height - height) / 2
+
+                                // ✅ правильное движение
+                                x: painSlider.leftPadding +
+                                    painSlider.visualPosition *
+                                    (painSlider.availableWidth - width)
                             }
 
                             onValueChanged: page.painLevel = Math.round(value)
                         }
-
 
                         Text {
                             text: "Слабая"
@@ -302,6 +303,9 @@ Page {
                     font.weight: 700
                 }
                 onClicked:{
+                    PatientManager.setIntensity(painSlider.value)
+                    console.log(painSlider.value)
+                    PatientManager.savePainEpisode()
                     text =  "cохранено"
                 }
             }
