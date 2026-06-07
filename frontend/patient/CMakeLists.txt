@@ -36,24 +36,24 @@ qt_add_qml_module(patient
         VERSION 1.0
         RESOURCE_PREFIX /qt/qml
         QML_FILES
-        qml/App.qml
+        qml/core/App.qml
         qml/AutorizationForms/FIO.qml
         qml/AutorizationForms/Email.qml
         qml/AutorizationForms/BaseInfo.qml
-        qml/Screen01.qml
-        qml/HeadScreen.qml
-        qml/HeadModel.qml
-        qml/Scene3D.qml
-        qml/SelectableListPage.qml
-        qml/SymptomsScreen.qml
-        qml/TriggerScreen.qml
-        qml/PainTypeScreen.qml
-        qml/DrugScreen.qml
-        qml/AurasScreen.qml
-        qml/History.qml
-        qml/Chip.qml
-        qml/menu/MainMenu.qml
-        qml/menu/CardButton.qml
+        qml/Record/Record.qml
+        qml/Record/HeadScreen.qml
+        qml/3D/HeadModel.qml
+        qml/3D/Scene3D.qml
+        qml/Record/SelectableListPage.qml
+        qml/Record/SymptomsScreen.qml
+        qml/Record/TriggerScreen.qml
+        qml/Record/PainTypeScreen.qml
+        qml/Record/DrugScreen.qml
+        qml/Record/AurasScreen.qml
+        qml/History/History.qml
+        qml/Record/Chip.qml
+        qml/Menu/MainMenu.qml
+        qml/Menu/CardButton.qml
 )
 set_target_properties(patient PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"

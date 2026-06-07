@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick3D
 import QtQuick.Shapes
 import QtQuick.Controls
-
+import "../3D"
 Page {
     Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
     Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
@@ -32,9 +32,9 @@ Page {
             }
 
             onReleased: (event) => {
+                console.log("points = ", view3d.contour)
                 view3d.maybeClosePath()
                 view3d.selectInsideContour()
-                console.log("🟢 Released")
             }
         }
         Scene3D {

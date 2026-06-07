@@ -407,8 +407,9 @@ Page {
                         result.setMinutes(parseInt(parts[1]))
                     }
                     PatientManager.setIntensity(painSlider.value)
+                    PatientManager.setTime(result.toISOString())
                     PatientManager.savePainEpisode()
-                    console.log("Выбрано:", result.toLocaleTimeString())
+                    console.log("Выбрано:", result.toISOString())
                 }
             }
 
@@ -431,8 +432,6 @@ Page {
                 }
                 onClicked:{
                     painDialog.open()
-
-                    text =  "cохранено"
                 }
             }
         }

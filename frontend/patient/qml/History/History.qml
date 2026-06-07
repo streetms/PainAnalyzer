@@ -5,7 +5,8 @@ import QtQuick.Layouts
 Page {
     id: root
     signal backRequested()
-
+    Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
+    Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
     background: Rectangle {
         color: "#f3f4f6"
     }
@@ -33,16 +34,16 @@ Page {
                     height: 170
 
                     property var points: [
-                        {x:6,y:7},
-                        {x:7,y:8},
-                        {x:8,y:9},
-                        {x:9,y:10},
-                        {x:10,y:8},
-                        {x:11,y:9},
-                        {x:12,y:6},
-                        {x:13,y:3},
-                        {x:14,y:5},
-                        {x:15,y:6}
+                        {x:1,y:7},
+                        {x:2,y:8},
+                        {x:3,y:9},
+                        {x:4,y:10},
+                        {x:5,y:8},
+                        {x:6,y:9},
+                        {x:7,y:6},
+                        {x:8,y:3},
+                        {x:9,y:5},
+                        {x:10,y:6}
                     ]
 
                     function colorForValue(v){
@@ -375,42 +376,42 @@ Page {
         id: historyModel
 
         ListElement {
-            date: "Сегодня, 14 апреля"
-            pain: 5
+            date: "Сегодня, 10 мая"
+            pain: 6
             symptoms: "Головная боль, Усталость, Тошнота"
             triggers: "Стресс, Мало сна"
         }
 
         ListElement {
-            date: "Вчера, 13 апреля"
-            pain: 3
+            date: "Вчера, 9 мая"
+            pain: 5
             symptoms: "Тошнота, Светобоязнь"
             triggers: "Яркий свет"
         }
 
         ListElement {
-            date: "12 апреля"
+            date: "8 мая"
             pain: 6
             symptoms: "Головная боль, Напряжение"
             triggers: "Работа за компьютером, Пропуск еды"
         }
 
         ListElement {
-            date: "11 апреля"
+            date: "7 мая"
             pain: 4
             symptoms: "Усталость, Сонливость"
             triggers: "Недостаток воды"
         }
 
         ListElement {
-            date: "10 апреля"
+            date: "6 мая"
             pain: 2
             symptoms: "Легкая головная боль"
             triggers: "Долгая дорога"
         }
 
         ListElement {
-            date: "9 апреля"
+            date: "5 мая"
             pain: 7
             symptoms: "Головная боль, Тошнота"
             triggers: "Стресс"

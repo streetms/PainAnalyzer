@@ -2,8 +2,9 @@ import QtQuick 6.11
 import QtQuick.Controls 6.11
 import QtQuick.Controls.Material 6.11
 import Shared 1.0
-import "AutorizationForms"
 import PainAnalyzer 1.0
+import "../Menu"
+
 ApplicationWindow {
     width: 800
     height: 600
@@ -23,7 +24,7 @@ ApplicationWindow {
         id: stack
         anchors.fill: parent
         initialItem:
-            "menu/MainMenu.qml"
+            MainMenu{}
     }
 
     function goBack() {
@@ -37,47 +38,47 @@ ApplicationWindow {
     function openScreen(key) {
         switch (key) {
             case "Menu": {
-                stack.push(Qt.resolvedUrl("Menu.qml"));
+                stack.push(Qt.resolvedUrl("../Menu/MainMenu.qml"));
                 break
             }
             case "Record": {
-                stack.push(Qt.resolvedUrl("Screen01.qml"));
+                stack.push(Qt.resolvedUrl("../Record/Record.qml"));
                 break
             }
             case "History":{
-                stack.push(Qt.resolvedUrl("History.qml"));
+                stack.push(Qt.resolvedUrl("../History/History.qml"));
                 break
             }
             case "type":
-                stack.push(Qt.resolvedUrl("PainTypeScreen.qml"));
+                stack.push(Qt.resolvedUrl("../Record/PainTypeScreen.qml"));
                 break
             case "head":
-                stack.push(Qt.resolvedUrl("HeadScreen.qml"));
+                stack.push(Qt.resolvedUrl("../Record/HeadScreen.qml"));
                 break
             case "triggers":
-                stack.push(Qt.resolvedUrl("TriggerScreen.qml"));
+                stack.push(Qt.resolvedUrl("../Record/TriggerScreen.qml"));
                 break
             case "symptoms":
-                stack.push(Qt.resolvedUrl("SymptomsScreen.qml"));
+                stack.push(Qt.resolvedUrl("../Record/SymptomsScreen.qml"));
                 break
             case "auras":
-                stack.push(Qt.resolvedUrl("AurasScreen.qml"));
+                stack.push(Qt.resolvedUrl("../Record/AurasScreen.qml"));
                 break
             case "drugs":
-                stack.push(Qt.resolvedUrl("DrugScreen.qml"));
+                stack.push(Qt.resolvedUrl("../Record/DrugScreen.qml"));
                 break
-            case "BaseInfo": {
-                stack.push(Qt.resolvedUrl("AutorizationForms/BaseInfo.qml"));
-                break
-            }
-            case "FIO": {
-                stack.push(Qt.resolvedUrl("AutorizationForms/FIO.qml"));
-                break
-            }
-            case "Email": {
-                stack.push(Qt.resolvedUrl("AutorizationForms/Email.qml"));
-                break
-            }
+            // case "BaseInfo": {
+            //     stack.push(Qt.resolvedUrl("AutorizationForms/BaseInfo.qml"));
+            //     break
+            // }
+            // case "FIO": {
+            //     stack.push(Qt.resolvedUrl("AutorizationForms/FIO.qml"));
+            //     break
+            // }
+            // case "Email": {
+            //     stack.push(Qt.resolvedUrl("AutorizationForms/Email.qml"));
+            //     break
+            // }
             default:
                 console.log("Unknown screen key:", key)
         }
@@ -95,9 +96,9 @@ ApplicationWindow {
             console.log("clicked")
             goBack()
         }
-        function onAddEntryClicked(){
-            stack.push("AutorizationForms/FIO.qml")
-        }
+        // function onAddEntryClicked(){
+        //     stack.push("AutorizationForms/FIO.qml")
+        // }
     }
     Connections {
         target: PatientManager
