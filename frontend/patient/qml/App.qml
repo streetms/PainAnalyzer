@@ -13,9 +13,6 @@ ApplicationWindow {
         id: snackbar
     }
 
-    // Component.onCompleted: {
-    //     snackbar.show("Hello!")
-    // }
     Component.onCompleted: {
         console.log("stack:", stack)
         console.log("Initial item:", stack.initialItem ? stack.initialItem : "null")
@@ -25,9 +22,8 @@ ApplicationWindow {
     StackView {
         id: stack
         anchors.fill: parent
-         // initialItem: Screen01{}
         initialItem:
-            "AutorizationForms/Email.qml"
+            "menu/MainMenu.qml"
     }
 
     function goBack() {

@@ -52,6 +52,8 @@ qt_add_qml_module(patient
         qml/AurasScreen.qml
         qml/History.qml
         qml/Chip.qml
+        qml/menu/MainMenu.qml
+        qml/menu/CardButton.qml
 )
 set_target_properties(patient PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
