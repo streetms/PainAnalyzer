@@ -56,6 +56,7 @@ qt_add_qml_module(patient
         qml/Menu/CardButton.qml
         qml/History/PainLevelGraph.qml
         qml/History/HistoryListView.qml
+        qml/Record/TimeDialog.qml
 )
 set_target_properties(patient PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
