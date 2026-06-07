@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Shared 1.0
 ListView {
     id: historyList
     Layout.fillWidth: true
@@ -50,40 +51,11 @@ ListView {
                 width: 200
                 height: 26
 
-                Slider {
+                PainSlider {
                     id: painSlider
-                    anchors.fill: parent
-                    from: 0
-                    to: 10
                     value: pain
                     enabled: false
-
-                    background: Rectangle {
-                        x: 0
-                        y: parent.height/2 - 4
-                        width: parent.width
-                        height: 8
-                        radius: 4
-
-                        gradient: Gradient {
-                            orientation: Gradient.Horizontal
-                            GradientStop { position: 0.0; color: "#22c55e" }
-                            GradientStop { position: 0.5; color: "#eab308" }
-                            GradientStop { position: 1.0; color: "#ef4444" }
-                        }
-                    }
-
-                    handle: Rectangle {
-                        width: 16
-                        height: 16
-                        radius: 8
-                        y: parent.height/2 - height/2
-                        x: painSlider.visualPosition * (painSlider.availableWidth - width)
-
-                        color: "#ef4444"
-                        border.color: "white"
-                        border.width: 2
-                    }
+                    radius: 10
                 }
             }
 

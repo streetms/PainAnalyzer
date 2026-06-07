@@ -14,6 +14,7 @@ qt_add_qml_module(shared_ui
         RESOURCE_PREFIX /qt/qml
         QML_FILES
         Snackbar.qml
+        PainSlider.qml
 )
 
 target_link_libraries(shared_ui

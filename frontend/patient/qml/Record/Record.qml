@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 import PainAnalyzer 1.0
+import Shared 1.0
 Page {
     Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
     Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
@@ -70,87 +71,12 @@ Page {
                         font.weight: 700
                         color: "#1F1F24"
                     }
-
-                    Item {
-                        width: parent.width
-                        height: 52
-
-                        // Gradient track (rounded)
-                        Rectangle {
-                            id: track
-                            x: 0
-                            y: 8
-                            width: parent.width
-                            height: 26
-                            radius: 13
-                            gradient: Gradient {
-                                orientation: Gradient.Horizontal
-                                GradientStop {
-                                    position: 0.0
-                                    color: "#9BE07A"
-                                }
-                                GradientStop {
-                                    position: 0.55
-                                    color: "#E7D36A"
-                                }
-                                GradientStop {
-                                    position: 1.0
-                                    color: "#B9877F"
-                                }
-                            }
-                        }
-
-                        Slider {
-                            id: painSlider
-                            anchors.fill: track
-
-                            from: 0
-                            to: 10
-                            stepSize: 1
-                            value: 5
-
-                            background: Item { }
-                            implicitHeight: track.height
-
-                            handle: Rectangle {
-                                width: 24
-                                height: 24
-                                radius: 12
-                                color: "#E00000"
-                                border.width: 1
-                                border.color: "#B3000059"
-
-                                y: (parent.height - height) / 2
-
-                                // ✅ правильное движение
-                                x: painSlider.leftPadding +
-                                    painSlider.visualPosition *
-                                    (painSlider.availableWidth - width)
-                            }
-
-                            onValueChanged: page.painLevel = Math.round(value)
-                        }
-
-                        Text {
-                            text: "Слабая"
-                            anchors.left: parent.left
-                            anchors.leftMargin: 6
-                            anchors.bottom: parent.bottom
-                            font.pixelSize: 16
-                            font.weight: 600
-                            color: "#3A3A41"
-                        }
-
-                        Text {
-                            text: "Сильная"
-                            anchors.right: parent.right
-                            anchors.rightMargin: 6
-                            anchors.bottom: parent.bottom
-                            font.pixelSize: 16
-                            font.weight: 600
-                            color: "#3A3A41"
-                        }
+                    PainSlider{
+                        id: painSlider
+                        radius:15
+                        value: 5
                     }
+                    /////////////////
                 }
             }
 
