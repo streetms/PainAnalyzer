@@ -2,33 +2,22 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import PainAnalyzer 1.0
-Page {
-    id: page
-    // focus: true
-    // Component.onCompleted: page.forceActiveFocus()
 
-    // Keys.onBackPressed: (event) => { event.accepted = true; goBack() }
-    // Keys.onEscapePressed: (event) => { event.accepted = true; goBack() }
-    //
+SelectableListPage {
     Keys.onEscapePressed: (e) => { e.accepted = true; win.goBack() }
     Keys.onBackPressed:   (e) => { e.accepted = true; win.goBack() }
-    SelectionDialog {
-        id: dlg
-        parent: Overlay.overlay   // важно: не page.Window.overlay
+    pageTitle: "Ауры"
+    customPlaceholder: "Новая аура"
 
-        options: [
-            {text: "зрительная"},
-            {text: "слабость в конечностях с одной стороны"},
-            {text: "потеря зрения на один глаз"},
-            {text: "трудности при произношении слов"},
-            {text: "двоение в глазах"},
-            {text: "шаткость"}
-        ]
-
-        onConfirmed: (text) => {
-            PatientManager.setAuras(text)
-            dlg.close()
-            Qt.callLater(() => page.StackView.view.pop())
-        }
+    items: [
+        "зрительная",
+        "слабость в конечностях с одной стороны",
+        "потеря зрения на один глаз",
+        "трудности при произношении слов",
+        "двоение в глазах",
+        "шаткость"
+    ]
+    onConfirmed: function(list) {
+        PatientManager.setAuras(list)
     }
 }

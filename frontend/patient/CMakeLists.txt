@@ -44,14 +44,14 @@ qt_add_qml_module(patient
         qml/HeadScreen.qml
         qml/HeadModel.qml
         qml/Scene3D.qml
-        qml/SelectionDialog.qml
+        qml/SelectableListPage.qml
         qml/SymptomsScreen.qml
         qml/TriggerScreen.qml
         qml/PainTypeScreen.qml
         qml/DrugScreen.qml
         qml/AurasScreen.qml
-        qml/Menu.qml
         qml/History.qml
+        qml/Chip.qml
 )
 set_target_properties(patient PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
