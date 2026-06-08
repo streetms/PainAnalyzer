@@ -8,9 +8,9 @@
 #include "application/PatientService.h"
 #include "core/presentation/UiExecutor.h"
 
-class PatientManager : public QObject  {
+class PatientViewModel : public QObject  {
 protected:
-    ~PatientManager() = default;
+    ~PatientViewModel() = default;
 
 private:
     Q_OBJECT
@@ -21,13 +21,15 @@ private:
     UiExecutor m_executor;
 public:
 
-    PatientManager();
+    PatientViewModel();
 
     signals:
         void errorOccurred(const QString& message);
 
 public slots:
     void savePainEpisode();
+    void setTime(QString ISOString);
+    void setIntensity(int intensity);
     void setTriggers(const QStringList& triggers);
     void setAuras(const QStringList& auras);
     void setSymptoms(const QStringList& symptoms);

@@ -1,55 +1,63 @@
-#include "presentation/PatientManager.h"
+#include "presentation/PatientViewModel.h"
 #include <QJsonObject>
 
-// PatientManager * PatientManager::instance() {
-//     static PatientManager manager;
+// PatientViewModel * PatientViewModel::instance() {
+//     static PatientViewModel manager;
 //     manager._user = new Patient;
 //     return &manager;
 // }
 
-PatientManager::PatientManager() {
+PatientViewModel::PatientViewModel() {
     connect(&m_executor, &UiExecutor::errorOccurred,
-            this, &PatientManager::errorOccurred);
+            this, &PatientViewModel::errorOccurred);
     // _user = new Patient();
     // _authManager = new AuthManager();
 }
 
-void PatientManager::savePainEpisode() {
+void PatientViewModel::savePainEpisode() {
     m_executor.run([this]() {
         _patientService.savePainEpisode(_painEpisode);
+        _painEpisode.clear();
     });
-
 }
 
-void PatientManager::setTriggers(const QStringList& triggers)  {
+void PatientViewModel::setTime(QString ISOString) {
+    _painEpisode.started_at = ISOString.toStdString();
+}
+
+void PatientViewModel::setIntensity(int intensity) {
+    _painEpisode.intensity = intensity;
+}
+
+void PatientViewModel::setTriggers(const QStringList& triggers)  {
     _painEpisode.triggers.reserve(triggers.size());
     for (auto& trigger : triggers) {
         _painEpisode.triggers.push_back(trigger.toStdString());
     }
 }
 
-void PatientManager::setAuras(const QStringList& auras) {
+void PatientViewModel::setAuras(const QStringList& auras) {
     _painEpisode.triggers.reserve(auras.size());
     for (auto& aura : auras) {
         _painEpisode.auras.push_back(aura.toStdString());
     }
 }
 
-void PatientManager::setSymptoms(const QStringList& symptoms) {
+void PatientViewModel::setSymptoms(const QStringList& symptoms) {
     _painEpisode.symptoms.reserve(symptoms.size());
     for (auto& symptom : symptoms) {
         _painEpisode.symptoms.push_back(symptom.toStdString());
     }
 }
 
-void PatientManager::setDrugs(const QStringList& drugs) {
+void PatientViewModel::setDrugs(const QStringList& drugs) {
     _painEpisode.drugs.reserve(drugs.size());
     for (auto& drug : drugs) {
         _painEpisode.drugs.push_back(drug.toStdString());
     }
 }
 
-void PatientManager::setPainTypes(const QStringList &painTypes) {
+void PatientViewModel::setPainTypes(const QStringList &painTypes) {
     _painEpisode.types.reserve(painTypes.size());
     for (auto& type : painTypes) {
         _painEpisode.types.push_back(type.toStdString());
@@ -57,26 +65,26 @@ void PatientManager::setPainTypes(const QStringList &painTypes) {
 }
 
 
-void PatientManager::setEmail(QString email) {
+void PatientViewModel::setEmail(QString email) {
     _patient.email = email.toStdString();
 }
 
-void PatientManager::setFullName(QString fullName) {
+void PatientViewModel::setFullName(QString fullName) {
     _patient.fullName = fullName.toStdString();
 }
 
-void PatientManager::setBirthday(QDate birthday) {
+void PatientViewModel::setBirthday(QDate birthday) {
     _patient.birthday = birthday.toString(Qt::ISODate).toStdString();
 }
 
-void PatientManager::setHeight(int height) {
+void PatientViewModel::setHeight(int height) {
     _patient.height = height;
 }
 
-void PatientManager::setWeight(int weight) {
+void PatientViewModel::setWeight(int weight) {
     _patient.weight = weight;
 }
 
-PainEpisode * PatientManager::getPainEpisode() {
+PainEpisode * PatientViewModel::getPainEpisode() {
     return &_painEpisode;
 }

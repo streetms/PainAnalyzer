@@ -18,11 +18,11 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 set(SRC
         src/main.cpp
-        src/presentation/PatientManager.cpp
+        src/presentation/PatientViewModel.cpp
 )
 
 set(HEADERS
-        include/presentation/PatientManager.h
+        include/presentation/PatientViewModel.h
         src/infrastructure/PatientRepository.cpp
         include/infrastructure/PatientRepository.h
         src/application/PatientService.cpp
