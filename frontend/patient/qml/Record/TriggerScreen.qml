@@ -22,8 +22,9 @@ SelectableListPage {
         "голод",
         "перемена погоды"
     ]
-
+    userItems: Settings.userTriggers()
     onConfirmed: function(list) {
         PatientManager.setTriggers(list)
+        Settings.updateTriggers(userItems)
     }
 }

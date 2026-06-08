@@ -15,8 +15,9 @@ SelectableListPage {
             "транквилизаторы",
             "сосудистые"
     ]
-
+    userItems: Settings.userDrugs()
     onConfirmed: function(list) {
         PatientManager.setDrugs(list)
+        Settings.updateDrugs(userItems)
     }
 }

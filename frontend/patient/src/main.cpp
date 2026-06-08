@@ -2,8 +2,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
-#include "presentation/PatientManager.h"
-
+#include "presentation/PatientViewModel.h"
+#include "presentation/SettingsViewModel.h"
 
 int factorial(int number) {
     int res = 1;
@@ -17,17 +17,23 @@ int factorial(int number) {
 int main(int argc, char *argv[]) {
 
     QGuiApplication app(argc, argv);
+
     QQuickStyle::setStyle("Material");
 
     QQmlApplicationEngine engine;
 
-    PatientManager *patientManager = new PatientManager();
+    PatientViewModel *patientManager = new PatientViewModel();
+    SettingsViewModel *settings = new SettingsViewModel();
     qmlRegisterSingletonInstance("PainAnalyzer",1,0,"PatientManager",patientManager);
+    qmlRegisterSingletonInstance("PainAnalyzer",1,0,"Settings",settings);
 
     engine.loadFromModule("Patient","App");
     if (engine.rootObjects().isEmpty()) {
         return -1;
     }
-
+    qDebug() << "-------------------------------------------------";
+    qDebug() << QSslSocket::availableBackends();
+    qDebug() << QSslSocket::supportsSsl();
+    qDebug() << "-------------------------------------------------";
      return app.exec();
 }

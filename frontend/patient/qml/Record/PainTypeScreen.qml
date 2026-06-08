@@ -18,7 +18,9 @@ SelectableListPage {
             "жжет",
             "колет иглами",
     ]
+    userItems: Settings.userPainTypes()
     onConfirmed: function(list) {
         PatientManager.setPainTypes(list)
+        Settings.updatePainTypes(userItems)
     }
 }

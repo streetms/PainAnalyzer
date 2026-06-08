@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import PainAnalyzer 1.0
 
 Page {
     id: page
@@ -8,7 +9,8 @@ Page {
     // ===== ПАРАМЕТРЫ =====
     property string pageTitle: ""
     property string customPlaceholder: "Добавить"
-    property var items: []              // массив строк
+    property var items: []
+    property var userItems: []
     signal confirmed(var selectedList)
 
     title: pageTitle
@@ -21,6 +23,12 @@ Page {
         for (var i = 0; i < items.length; i++) {
             commonModel.append({
                 name: items[i],
+                selected: false
+            })
+        }
+        for (var i = 0; i < userItems.length; i++) {
+            userModel.append({
+                name: userItems[i],
                 selected: false
             })
         }
@@ -115,7 +123,9 @@ Page {
                                 name: customInput.text,
                                 selected: true
                             })
+                            userItems.push(customInput.text)
                             customInput.text = ""
+
                         }
                     }
                 }

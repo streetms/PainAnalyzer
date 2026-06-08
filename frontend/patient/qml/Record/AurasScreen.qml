@@ -17,7 +17,9 @@ SelectableListPage {
         "двоение в глазах",
         "шаткость"
     ]
+    userItems: Settings.userAuras()
     onConfirmed: function(list) {
         PatientManager.setAuras(list)
+        Settings.updateAuras(userItems)
     }
 }

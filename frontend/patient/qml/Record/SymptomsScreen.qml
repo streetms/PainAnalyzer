@@ -18,7 +18,9 @@ SelectableListPage {
         "Неприязнь к свету/звуку",
         "Тошнота/рвота"
     ]
+    userItems: Settings.userSymptoms()
     onConfirmed: function(list) {
-        PatientManager.setSympoms(list)
+        PatientManager.setSymptoms(list)
+        Settings.updateSymptoms(userItems)
     }
 }

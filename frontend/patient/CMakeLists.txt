@@ -27,7 +27,12 @@ set(HEADERS
         include/infrastructure/PatientRepository.h
         src/application/PatientService.cpp
         include/application/PatientService.h
+        src/presentation/SettingsViewModel.cpp
+        include/presentation/SettingsViewModel.h
+        src/application/SettingsService.cpp
+        include/application/SettingsService.h
 )
+
 set(QT_ANDROID_DEPLOYMENT_TYPE Minimal)
 ## Создаём Qt-приложение
 qt_add_executable(patient ${SRC} ${HEADERS}  resource.qrc)
