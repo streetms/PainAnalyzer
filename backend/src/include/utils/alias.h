@@ -11,3 +11,4 @@ using tcp  = net::ip::tcp;
 using json = nlohmann::json;
 using Request  = http::request<http::string_body>;
 using Response = http::response<http::string_body>;
+using ulid = std::string;

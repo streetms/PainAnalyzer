@@ -14,6 +14,7 @@ void my_terminate_handler()
 }
 void router_setup(Router& router, AppContext& ctx) {
     routes::registerAuthRoutes(router,ctx.authHandler);
+    routes::registerPainEpisodeRoutes(router,ctx.painEpisodeHandler);
 }
 
 int main()

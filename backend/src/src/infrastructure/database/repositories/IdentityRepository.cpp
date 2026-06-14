@@ -14,8 +14,7 @@ namespace {
     )SQL";
 }
 
-int64_t
-IdentityRepository::insertIdentity(pqxx::work &tx, std::string_view type, std::string_view identifier) const {
+int64_t IdentityRepository::insertIdentity(pqxx::work &tx, std::string_view type, std::string_view identifier) const {
     auto res = tx.exec_prepared(
         Statements::InsertIdentity.data(),
         type,

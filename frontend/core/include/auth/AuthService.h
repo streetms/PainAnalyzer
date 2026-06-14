@@ -1,8 +1,0 @@
-//
-// Created by konstantin on 09.04.2026.
-//
-
-#ifndef PAINANALYZER_AUTHSERVICE_H
-#define PAINANALYZER_AUTHSERVICE_H
-
-#endif //PAINANALYZER_AUTHSERVICE_H

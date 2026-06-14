@@ -10,6 +10,7 @@
 #include "infrastructure/http/Router.h"
 namespace routes {
     void registerAuthRoutes(Router& router, AuthHandler& handler);
+    void registerPainEpisodeRoutes(Router& router, PainEpisodeHandlers& handler);
 }
 
 #endif //PAINAPP_REGISTERROUTES_H

@@ -20,6 +20,7 @@ namespace db {
                     pqxx::work tx(*conn);
                     if constexpr (std::is_void_v<Result>) {
                         fn(tx);
+                        tx.commit();
                         co_return;
                     } else {
                         auto res = fn(tx);

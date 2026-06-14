@@ -1,6 +1,7 @@
 #include "infrastructure/database/ConnectionPool.h"
 #include "infrastructure/database/repositories/IdentityRepository.h"
 #include "infrastructure/database/repositories/TokenRepository.h"
+#include "modules/pain/PainEpisodeRepository.h"
 namespace db {
     ConnectionGuard::ConnectionGuard(ConnectionGuard &&other) noexcept
             : conn_(other.conn_), pool_(other.pool_) {
@@ -63,6 +64,7 @@ namespace db {
     void ConnectionPool::prepareStatements(pqxx::connection *conn) {
         IdentityRepository::prepare(conn);
         TokenRepository::prepare(conn);
+        PainEpisodeRepository::prepare(conn);
         // conn->prepare("create_auth_token",     sql::auth::create_auth_token);
         // conn->prepare("create_user_identities", sql::auth::create_user_identities);
     }
