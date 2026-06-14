@@ -21,6 +21,7 @@ class MyProjectConan(ConanFile):
             self.requires("boost/1.90.0")
             self.requires("libpqxx/8.0.1")
             self.requires("jwt-cpp/0.7.0")
+            self.requires("gtest/1.17.0")
         if self.options.with_client:
             self.requires("openssl/3.6.2")
 
