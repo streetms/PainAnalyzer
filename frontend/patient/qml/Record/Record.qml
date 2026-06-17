@@ -216,16 +216,14 @@ Page {
                 standardButtons: Dialog.Ok | Dialog.Cancel
                 onAccepted: {
                     var result = new Date()
-
-                    if (customRadio.checked) {
+                   if (customRadio.checked) {
                         var parts = timeField.text.split(":")
                         result.setHours(parseInt(parts[0]))
                         result.setMinutes(parseInt(parts[1]))
-                    }
+                   }
                     PatientManager.setIntensity(painSlider.value)
                     PatientManager.setTime(result.toISOString())
                     PatientManager.savePainEpisode()
-                    console.log("Выбрано:", result.toISOString())
                 }
             }
 

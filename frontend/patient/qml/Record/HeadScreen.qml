@@ -21,7 +21,6 @@ Page {
             onPressed: (event) => {
                 view3d.contour = [Qt.point(event.x, event.y)]
                 view3d.updatePath()
-                console.log("⏺️ Start", event.x, event.y)
             }
 
             onPositionChanged: (event) => {
@@ -32,7 +31,6 @@ Page {
             }
 
             onReleased: (event) => {
-                console.log("points = ", view3d.contour)
                 view3d.maybeClosePath()
                 view3d.selectInsideContour()
             }

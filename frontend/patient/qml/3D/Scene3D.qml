@@ -32,10 +32,6 @@ View3D {
     property var originalMaterialsByName: ({})
     property var selectedByName: ({})
     property var selectedOrder: []
-
-    // Диагностика picking
-    property bool debugPick: true
-
     // Линия контура
     Shape {
         anchors.fill: parent
@@ -51,14 +47,6 @@ View3D {
             }
         }
     }
-
-    // Включаем pickers на мешах (важно!)
-    Component.onCompleted: {
-        Qt.callLater(() => {
-                         console.log("meshes in app:", head.meshesList ? head.meshesList.length : "null")
-                     })
-    }
-
 
     // --- Геометрия: point-in-polygon ---
     function isPointInPolygon(point, polygon) {
@@ -122,7 +110,6 @@ View3D {
         selectedByName = ({})
         selectedOrder = []
         head.clearHighlights()
-        console.log("🧹 selection cleared")
     }
 
     // --- Pick по координатам ---
@@ -131,13 +118,6 @@ View3D {
         // У нас MouseArea во внешнем Rectangle с теми же anchors.fill, так что x/y совпадают.
         const r = view3d.pick(x, y)
 
-        if (debugPick) {
-            if (!r)
-                console.log("pick: null at", x, y)
-            else
-                console.log("pick:", (r.objectHit ? r.objectHit.objectName : "no objectHit"),
-                            " at", x, y)
-        }
 
         if (!r || !r.objectHit)
             return null
@@ -147,35 +127,21 @@ View3D {
 
     // --- Lasso selection ---
     function selectInsideContour() {
-        if (!contour || contour.length < 3) {
-            console.log("⚠️ contour too short")
-            return
-        }
-
-        const b = contourBounds(contour)
+        const bounds = contourBounds(contour)
         const step = 10
-
-        // сбросим прошлый выбор (если нужно)
         clearSelection()
-
-        let hits = 0
-        for (let y = b.top; y <= b.bottom; y += step) {
-            for (let x = b.left; x <= b.right; x += step) {
+        for (let y = bounds.top; y <= bounds.bottom; y += step) {
+            for (let x = bounds.left; x <= bounds.right; x += step) {
                 const p = Qt.point(x, y)
                 if (!isPointInPolygon(p, contour))
                     continue
-
                 const mesh = pickMeshAt(x, y)
                 if (mesh) {
-                    hits++
                     selectMesh(mesh)
                 }
             }
         }
-
-        console.log("🎯 hits:", hits, " Selected parts:", selectedOrder.join(", "))
     }
-
     // UI
     Rectangle {
         z: 20

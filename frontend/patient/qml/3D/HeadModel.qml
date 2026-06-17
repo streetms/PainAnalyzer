@@ -200,6 +200,5 @@ Node {
         meshesList = node_1.children.filter(c => c instanceof Model)
         // На всякий случай принудительно всё в серый при старте:
         clearHighlights()
-        console.log("✅ meshesList:", meshesList.map(m => m.objectName))
     }
 }

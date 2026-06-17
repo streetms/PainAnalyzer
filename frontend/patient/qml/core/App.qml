@@ -14,11 +14,6 @@ ApplicationWindow {
         id: snackbar
     }
 
-    Component.onCompleted: {
-        console.log("stack:", stack)
-        console.log("Initial item:", stack.initialItem ? stack.initialItem : "null")
-        console.log("Current item:", stack.currentItem ? stack.currentItem : "null")
-    }
 
     StackView {
         id: stack
@@ -79,8 +74,6 @@ ApplicationWindow {
             //     stack.push(Qt.resolvedUrl("AutorizationForms/Email.qml"));
             //     break
             // }
-            default:
-                console.log("Unknown screen key:", key)
         }
     }
 
