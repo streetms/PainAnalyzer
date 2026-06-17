@@ -1,6 +1,8 @@
 #pragma once
 #include "infrastructure/database/ConnectionPool.h"
 #include "utils/alias.h"
+#include <type_traits>
+
 namespace db {
     class Database {
     public:
@@ -8,16 +10,16 @@ namespace db {
             : pool_(pool), conn_pool_(conn_pool) {}
 
         template<typename Func>
-        auto run(Func fn)
-            -> net::awaitable<decltype(fn(std::declval<pqxx::work&>()))>
+        auto run(Func fn) -> net::awaitable<std::invoke_result_t<Func, pqxx::work&>>
         {
-            using Result = decltype(fn(std::declval<pqxx::work&>()));
-
-            auto fut = net::co_spawn(
+            // std::invoke_result_t — более чистая альтернатива decltype(std::declval...)
+            using Result = std::invoke_result_t<Func, pqxx::work&>;
+            co_return co_await net::co_spawn(
                 pool_,
                 [this, fn = std::move(fn)]() -> net::awaitable<Result> {
                     auto conn = conn_pool_.acquire();
                     pqxx::work tx(*conn);
+
                     if constexpr (std::is_void_v<Result>) {
                         fn(tx);
                         tx.commit();
@@ -27,20 +29,9 @@ namespace db {
                         tx.commit();
                         co_return res;
                     }
-                },
-                net::use_future
+            },
+                net::use_awaitable // <-- Главный секрет избавления от future
             );
-
-            if constexpr (std::is_void_v<Result>) {
-                co_await net::post(
-                    net::use_awaitable
-                );
-
-                fut.get();
-                co_return;
-            } else {
-                co_return fut.get();
-            }
         }
 
     private:
