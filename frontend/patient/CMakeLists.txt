@@ -31,6 +31,14 @@ set(HEADERS
         include/presentation/SettingsViewModel.h
         src/application/SettingsService.cpp
         include/application/SettingsService.h
+        src/presentation/PainEpisodeModel.cpp
+        include/presentation/PainEpisodeModel.h
+        src/presentation/PainEpisodeViewModel.cpp
+        include/presentation/PainEpisodeViewModel.h
+        src/application/PainEpisodeService.cpp
+        include/application/PainEpisodeService.h
+        src/infrastructure/PainEpisodeRepository.cpp
+        include/infrastructure/PainEpisodeRepository.h
 )
 
 set(QT_ANDROID_DEPLOYMENT_TYPE Minimal)

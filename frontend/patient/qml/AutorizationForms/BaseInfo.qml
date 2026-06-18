@@ -137,11 +137,11 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
             onClicked: {
-                PatientManager.setBirthday(root.selectedDate)
-                PatientManager.setHeight(heightField.text)
-                PatientManager.setWeight(weightField.text)
-                PatientManager.registerPatient()
-                root.openRequested("Record")
+                // PatientManager.setBirthday(root.selectedDate)
+                // PatientManager.setHeight(heightField.text)
+                // PatientManager.setWeight(weightField.text)
+                // PatientManager.registerPatient()
+                root.openRequested("Email")
             }
         }
     }

@@ -18,7 +18,7 @@ private:
     PainEpisode _painEpisode;
     PatientService _patientService;
     Patient _patient;
-    UiExecutor m_executor;
+    UiExecutor _executor;
 public:
 
     PatientViewModel();
@@ -40,5 +40,6 @@ public slots:
     void setBirthday(QDate birthday);
     void setHeight(int height);
     void setWeight(int weight);
+
     PainEpisode* getPainEpisode();
 };

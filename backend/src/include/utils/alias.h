@@ -3,7 +3,7 @@
 #include <boost/beast.hpp>
 #include <boost/asio.hpp>
 #include <nlohmann/json.hpp>
-
+#include <boost/url.hpp>
 namespace beast = boost::beast;
 namespace http  = beast::http;
 namespace net   = boost::asio;
@@ -12,3 +12,4 @@ using json = nlohmann::json;
 using Request  = http::request<http::string_body>;
 using Response = http::response<http::string_body>;
 using ulid = std::string;
+namespace urls = boost::urls;

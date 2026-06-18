@@ -8,14 +8,14 @@
 // }
 
 PatientViewModel::PatientViewModel() {
-    connect(&m_executor, &UiExecutor::errorOccurred,
+    connect(&_executor, &UiExecutor::errorOccurred,
             this, &PatientViewModel::errorOccurred);
     // _user = new Patient();
     // _authManager = new AuthManager();
 }
 
 void PatientViewModel::savePainEpisode() {
-    m_executor.run([this]() {
+    _executor.run([this]() {
         _patientService.savePainEpisode(_painEpisode);
         _painEpisode.clear();
     });
@@ -51,10 +51,10 @@ void PatientViewModel::setSymptoms(const QStringList& symptoms) {
 }
 
 void PatientViewModel::setDrugs(const QStringList& drugs) {
-    _painEpisode.drugs.reserve(drugs.size());
-    for (auto& drug : drugs) {
-        _painEpisode.drugs.push_back(drug.toStdString());
-    }
+    // _painEpisode.drugs.reserve(drugs.size());
+    // for (auto& drug : drugs) {
+    //     _painEpisode.drugs.push_back(drug.toStdString());
+    // }
 }
 
 void PatientViewModel::setPainTypes(const QStringList &painTypes) {

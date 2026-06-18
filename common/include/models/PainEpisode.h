@@ -6,6 +6,7 @@
 #define PAINAPP_PAINEPISODE_H
 #include <vector>
 #include <string>
+#include <nlohmann/json.hpp>
 struct PainEpisode {
     std::vector<std::string> types;
     std::vector<std::string> triggers;

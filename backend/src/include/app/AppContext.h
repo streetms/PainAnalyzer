@@ -23,9 +23,10 @@ private:
     db::Database db_;
     net::thread_pool threadPool_;
     db::ConnectionPool connectionPool_;
+
+public:
     AuthService authService_;
     PainEpisodeService painEpisodeService_;
-public:
     AuthHandler authHandler;
     PainEpisodeHandlers painEpisodeHandler;
 };

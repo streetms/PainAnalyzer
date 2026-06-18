@@ -10,6 +10,50 @@ Page {
     background: Rectangle {
         color: "#f3f4f6"
     }
+    Component.onCompleted: {
+        let now = new Date();
+        let firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+        let lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        let startStr = Qt.formatDateTime(firstDay, Qt.ISODate);
+        lastDay.setHours(23, 59, 59, 999);
+        let endStr = Qt.formatDateTime(lastDay, Qt.ISODate);
+
+        episodesViewModel.refresh(startStr, endStr);
+    }
+
+    // 2. ЖДЕМ, пока C++ скажет, что данные загружены и добавлены в модель
+    Connections {
+        target: episodesViewModel.listModel
+
+        // Этот сигнал автоматически вызывается QAbstractListModel после вызова endResetModel() в C++
+        function onModelReset() {
+            loadChartDataForCurrentMonth();
+        }
+    }
+
+    // 3. Сама функция теперь только рисует график
+    function loadChartDataForCurrentMonth() {
+        let now = new Date();
+        let year = now.getFullYear();
+        let month = now.getMonth() + 1; // В C++ мы ожидаем месяцы 1-12
+
+        // Теперь данные точно пришли, берем их из модели
+        let rawData = episodesViewModel.listModel.getChartData(year, month);
+
+        let formattedPoints = [];
+        for (let i = 0; i < rawData.length; i++) {
+            formattedPoints.push({
+                x: rawData[i].day,
+                y: rawData[i].intensity
+            });
+            // console.log("День:", rawData[i].day, "Интенсивность:", rawData[i].intensity);
+        }
+
+        chart.points = formattedPoints;
+        chart.maxX = rawData.length;
+        chart.requestPaint();
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -29,20 +73,7 @@ Page {
                 spacing: 10
 
                 PainLevelGraph {
-                    points:[
-                        {x: 1, y: 7},
-                        {x: 2, y: 8},
-                        {x: 3, y: 9},
-                        {x: 4, y: 10},
-                        {x: 5, y: 8},
-                        {x: 6, y: 9},
-                        {x: 7, y: 6},
-                        {x: 8, y: 3},
-                        {x: 9, y: 5},
-                        {x: 10, y: 6}
-                    ]
-                    minX: 1
-                    maxX: 31
+                    id : chart
                 }
             }
         }
@@ -55,7 +86,7 @@ Page {
         }
 
         HistoryListView{
-            modelData: historyModel
+            modelData: episodesViewModel.listModel
         }
         Button {
             text: "Назад"
@@ -77,52 +108,6 @@ Page {
             }
 
             onClicked: root.backRequested()
-        }
-    }
-
-    ListModel {
-        id: historyModel
-
-        ListElement {
-            date: "Сегодня, 10 мая"
-            pain: 6
-            symptoms: "Головная боль, Усталость, Тошнота"
-            triggers: "Стресс, Мало сна"
-        }
-
-        ListElement {
-            date: "Вчера, 9 мая"
-            pain: 5
-            symptoms: "Тошнота, Светобоязнь"
-            triggers: "Яркий свет"
-        }
-
-        ListElement {
-            date: "8 мая"
-            pain: 6
-            symptoms: "Головная боль, Напряжение"
-            triggers: "Работа за компьютером, Пропуск еды"
-        }
-
-        ListElement {
-            date: "7 мая"
-            pain: 4
-            symptoms: "Усталость, Сонливость"
-            triggers: "Недостаток воды"
-        }
-
-        ListElement {
-            date: "6 мая"
-            pain: 2
-            symptoms: "Легкая головная боль"
-            triggers: "Долгая дорога"
-        }
-
-        ListElement {
-            date: "5 мая"
-            pain: 7
-            symptoms: "Головная боль, Тошнота"
-            triggers: "Стресс"
         }
     }
 }
