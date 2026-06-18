@@ -26,4 +26,25 @@ class MyProjectConan(ConanFile):
             self.requires("openssl/3.6.2")
 
     def configure(self):
-        self.options["boost"].header_only = True
+        self.options["boost"].header_only = False
+
+        self.options["boost"].without_python = True
+        self.options["boost"].without_math = True
+        self.options["boost"].without_wave = True
+        self.options["boost"].without_graph = True
+        self.options["boost"].without_test = True
+        self.options["boost"].without_locale = True
+        self.options["boost"].without_log = True
+        self.options["boost"].without_program_options = True
+        self.options["boost"].without_serialization = True
+        self.options["boost"].without_regex = True
+        self.options["boost"].without_mpi = True
+
+        self.options["boost"].without_iostreams = True
+        self.options["boost"].without_random = True
+        self.options["boost"].without_cobalt = True
+        self.options["boost"].without_process = True
+
+        self.options["boost"].without_coroutine = True
+        self.options["boost"].without_fiber = True
+        self.options["boost"].without_context = True

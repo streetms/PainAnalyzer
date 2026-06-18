@@ -6,7 +6,7 @@ configure_file(
 )
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS url)
 find_package(libpqxx REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(jwt-cpp CONFIG REQUIRED)
@@ -46,14 +46,15 @@ add_library(server_core
 
 target_link_libraries(server_core pqxx pq)
 target_link_libraries(server_core
-        Boost::headers
+        Boost::url
         libpqxx::pqxx
         nlohmann_json::nlohmann_json
         jwt-cpp::jwt-cpp
         stdc++_libbacktrace
         stdc++exp
 )
-add_executable(PainAnalyzerServer src/main.cpp)
+add_executable(PainAnalyzerServer src/main.cpp
+)
 target_link_libraries(PainAnalyzerServer server_core)
 target_include_directories(server_core PUBLIC
         include
