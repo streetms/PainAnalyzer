@@ -83,6 +83,10 @@ QVariantList PainEpisodeModel::getChartData(int year, int month) {
     return chartData;
 }
 
+const std::vector<PainEpisode> & PainEpisodeModel::episodes() const {
+    return episodes_;
+}
+
 QStringList PainEpisodeModel::toQStringList(const std::vector<std::string>& vec) const {
     QStringList list;
     list.reserve(vec.size());

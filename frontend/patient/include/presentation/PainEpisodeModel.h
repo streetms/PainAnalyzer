@@ -38,6 +38,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Q_INVOKABLE QVariantList getChartData(int year, int month);
+    const std::vector<PainEpisode>& episodes() const;
 protected:
     QHash<int, QByteArray> roleNames() const override {
         QHash<int, QByteArray> roles;

@@ -5,13 +5,14 @@
 #include <QObject>
 #include "application/PainEpisodeService.h"
 #include "PainEpisodeModel.h"
+
 class PainEpisodesViewModel : public QObject {
     Q_OBJECT
     Q_PROPERTY(PainEpisodeModel* listModel READ listModel)
 
 public:
     PainEpisodesViewModel(QObject* parent = nullptr);
-
+    Q_INVOKABLE bool exportFullReportToPdf(const QString& graphImagePath);
     PainEpisodeModel* listModel()  { return &listModel_; }
 
 public slots:
@@ -22,6 +23,7 @@ public slots:
     }
 
 private:
+    std::string to_string(std::vector<std::string> array);
     PainEpisodeService service_;
     PainEpisodeModel listModel_;
 };
