@@ -5,12 +5,14 @@ arch=armv8
 compiler=clang
 compiler.version=18
 compiler.libcxx=c++_shared
-build_type=Release
+build_type=Debug
 
 [conf]
 tools.android:ndk_path=/home/konstantin/Android/Sdk/ndk/27.2.12479018
 tools.cmake.cmaketoolchain:generator=Ninja
+tools.build:compiler_executables={"c": "aarch64-linux-android26-clang", "cpp": "aarch64-linux-android26-clang++"}
 
-[buildenv]
-CC=clang
-CXX=clang++
+[options]
+openssl/*:shared=True
+openssl/*:versioned_shared_libs=False
+

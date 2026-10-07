@@ -1,259 +1,279 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""Build Android APK via CMake + optional auto-sign"""
-
 import argparse
-import getpass
-import json
-import os
-import re
 import shutil
 import subprocess
-import sys
+from dbm import dumb
 from pathlib import Path
-
-# --------------------- Config ---------------------
-DEFAULT_CONFIG = {
-    "project_name": "PainAnalyzer",
-    "source_dir": "patient",
-    "build_type": "debug",
-    "build_dir_debug": "cmake-build-debug-android",
-    "build_dir_release": "cmake-build-release-android",
-    "install": True,
-    "auto_sign_release": True,
-    "cmake_defines_common": {
-        "CONAN_TOOLCHAIN:": "conan_profiles/android-arm64",
-        "CONAN_CMD": "",
-        "QT_HOST_PATH": "",
-        "QT_ANDROID_SDK_ROOT": "",
-        "QT_ANDROID_NDK_ROOT": "",
-        "ANDROID_SDK_ROOT": "",
-        "CMAKE_TOOLCHAIN_FILE": "",
-        "ANDROID_ABI": "arm64-v8a",
-        "ANDROID_PLATFORM": "android-35",
-        "CMAKE_PREFIX_PATH": "",
-        "QT_ANDROID_MIN_SDK_VERSION": "26",
-        "CMAKE_FIND_ROOT_PATH_MODE_PACKAGE": "BOTH",
-        "QT_ANDROID_BUILD_TOOLS_REVISION": "35.0.0",
-        "BUILD_FRONTEND": "ON"
-    },
-    "cmake_defines_debug": {},
-    "cmake_defines_release": {}
-}
-
-# --------------------- Helpers ---------------------
+import json
+import os
 def run(cmd, **kwargs):
-    print(f"\n$ {' '.join(map(str, cmd))}")
-    return subprocess.run(list(map(str, cmd)), text=True, **kwargs)
+    print("\n$", " ".join(map(str, cmd)))
+    subprocess.run([str(x) for x in cmd], check=True, **kwargs)
 
-def fail(msg, code=1):
-    sys.exit(f"❌ {msg}")
 
-def merge_dicts(a, b):
-    out = dict(a)
-    for k, v in (b or {}).items():
-        out[k] = merge_dicts(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
-    return out
+def check_config(config : dict):
+    for key,value in config.items():
+        if type(value) == str and value == "":
+            print(f"{key} not found")
+            print("Set the value in the android_build_config.json")
+            exit(0)
+        if type(value) == dict:
+            check_config(value)
+    return config
+def load_config(root: Path) -> dict:
+    path = root / "android_build_config.json"
+    with (path).open(encoding="utf-8") as f:
+        config = json.load(f)
+        return check_config(config)
 
-def has_adb_device():
-    if not shutil.which("adb"):
-        return False
-    p = run(["adb", "devices"], check=False, capture_output=True)
-    return p.returncode == 0 and any(re.search(r"\bdevice$", line) for line in p.stdout.splitlines())
+def resolve_paths(root: Path, cfg: dict):
+    build_type = cfg["build_type"].lower()
 
-def find_apk(build_dir, build_type):
-    apks = list(build_dir.rglob("*.apk"))
+    if build_type not in ("debug", "release"):
+        raise SystemExit("build_type должен быть debug или release")
+
+    source = Path(cfg.get("source_dir", "."))
+    source = source if source.is_absolute() else root / source
+
+    build = Path(cfg[f"build_dir_{build_type}"])
+    build = build if build.is_absolute() else root / build
+
+    return source.resolve(), build.resolve(), build_type.capitalize()
+
+
+def conan_install(source: Path, build: Path, cfg: dict, build_type: str):
+    c = cfg["cmake_defines_common"]
+
+    profile = Path(c["CONAN_PROFILE"])
+    if not profile.is_absolute():
+        profile = source / profile
+
+    options = []
+
+    if c.get("BUILD_FRONTEND") == "ON":
+        options += ["-o", "with_client=True", "-o", "with_server=False"]
+
+    if c.get("BUILD_BACKEND") == "ON":
+        options += ["-o", "with_client=False", "-o", "with_server=True"]
+
+    run([
+        c["CONAN_CMD"],
+        "install",
+        source,
+        "--output-folder", build,
+        "--profile:host", profile,
+        "--build=missing",
+        "-s", f"build_type={build_type}",
+        *options,
+    ])
+
+def cmake_configure(source: Path, build: Path, cfg: dict, build_type: str):
+    c = cfg["cmake_defines_common"]
+
+    qt = Path(c["CMAKE_PREFIX_PATH"])
+    toolchain = build / "conan_toolchain.cmake"
+
+    if not toolchain.exists():
+        raise SystemExit(f"Не найден Conan toolchain: {toolchain}")
+
+    defines = {
+        "CMAKE_BUILD_TYPE": build_type,
+
+        # Единственный toolchain CMake.
+        "CMAKE_TOOLCHAIN_FILE": toolchain,
+
+        # Qt Android.
+        "CMAKE_PREFIX_PATH": qt,
+        "Qt6_DIR": qt / "lib/cmake/Qt6",
+        "CMAKE_FIND_ROOT_PATH_MODE_PACKAGE": "ONLY",
+
+        "QT_HOST_PATH": c["QT_HOST_PATH"],
+        "ANDROID_SDK_ROOT": c["ANDROID_SDK_ROOT"],
+        "ANDROID_NDK_ROOT": c["ANDROID_NDK_ROOT"],
+        "QT_ANDROID_MIN_SDK_VERSION":
+            c.get("QT_ANDROID_MIN_SDK_VERSION", "26"),
+        "QT_ANDROID_BUILD_TOOLS_REVISION":
+            c.get("QT_ANDROID_BUILD_TOOLS_REVISION", ""),
+
+        "ANDROID_ABI": c.get("ANDROID_ABI", "arm64-v8a"),
+
+        "BUILD_FRONTEND": c.get("BUILD_FRONTEND", "OFF"),
+        "BUILD_BACKEND": c.get("BUILD_BACKEND", "OFF"),
+    }
+
+    build.mkdir(parents=True, exist_ok=True)
+
+    run([
+        "cmake",
+        "-S", source,
+        "-B", build,
+        *[
+            f"-D{name}={value}"
+            for name, value in defines.items()
+            if value != ""
+        ],
+    ])
+
+def package_apk(build: Path, cfg: dict):
+    c = cfg["cmake_defines_common"]
+
+    androiddeployqt = (
+            Path(c["QT_HOST_PATH"])
+            / "bin"
+            / "androiddeployqt"
+    )
+
+    deployment = (
+            build
+            / "frontend"
+            / "patient"
+            / "android-patient-deployment-settings.json"
+    )
+
+    if not androiddeployqt.exists():
+        raise SystemExit(
+            f"Не найден androiddeployqt:\n{androiddeployqt}"
+        )
+
+    if not deployment.exists():
+        raise SystemExit(
+            f"Не найден deployment settings:\n{deployment}"
+        )
+    with deployment.open("r", encoding="utf-8") as f:
+        deployment_data = json.load(f)
+
+    deployment_data["extraLibraryDirs"] = [
+        path
+        for path in deployment_data.get("extraLibraryDirs", [])
+        if ".conan2/p/b/opens" not in path
+    ]
+
+    with deployment.open("w", encoding="utf-8") as f:
+        json.dump(
+            deployment_data,
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
+
+    print("Filtered Android deployment extraLibraryDirs:")
+    for path in deployment_data.get("extraLibraryDirs", []):
+        print("  ", path)
+
+    run([
+        androiddeployqt,
+        "--input", deployment,
+        "--output", deployment.parent,
+        "--android-platform", "android-36",
+        "--gradle",
+    ])
+def find_apk(build: Path, build_type: str) -> Path:
+    apks = list(build.rglob("*.apk"))
+
     if not apks:
-        return None
-    bt = build_type.lower()
-    def score(p):
-        s = str(p).lower()
-        return (0 if bt in s else 1, 0 if "outputs/apk" in s else 1, 0 if "unsigned" not in s else 1, len(s))
-    return sorted(apks, key=score)[0]
+        raise SystemExit(f"APK не найден в {build}")
 
-def find_apksigner(sdk_root, explicit=""):
-    if explicit and Path(explicit).is_file():
-        return explicit
-    sdk = Path(sdk_root)
-    if not sdk.exists():
-        fail("ANDROID_SDK_ROOT не найден")
-    bt_dir = sdk / "build-tools"
-    if not bt_dir.exists():
-        fail(f"build-tools не найдена: {bt_dir}")
-    candidates = [d / "apksigner" for d in bt_dir.iterdir() if d.is_dir() and (d / "apksigner").is_file()]
-    if not candidates:
-        fail(f"apksigner не найден в {bt_dir}")
-    return str(sorted(candidates)[-1])
+    build_type = build_type.lower()
 
-def sign_apk(apksigner, unsigned_apk, out_apk, keystore, alias, storepass, keypass):
-    if not Path(keystore).is_file():
-        fail(f"Keystore не найден: {keystore}")
-    if not alias:
-        fail("Не задан alias для keystore")
-    env = os.environ.copy()
-    cmd = [apksigner, "sign", "--ks", keystore, "--ks-key-alias", alias, "--out", str(out_apk)]
-    if storepass:
-        env["APKSIGNER_STOREPASS"] = storepass
-        cmd += ["--ks-pass", "env:APKSIGNER_STOREPASS"]
-    if keypass:
-        env["APKSIGNER_KEYPASS"] = keypass
-        cmd += ["--key-pass", "env:APKSIGNER_KEYPASS"]
-    print(f"✍️  Подписываем: {unsigned_apk} → {out_apk}")
-    run(cmd, check=True, env=env)
+    apks.sort(key=lambda p: (
+        build_type not in str(p).lower(),
+        "outputs/apk" not in str(p),
+        "unsigned" in p.name.lower(),
+        len(str(p)),
+    ))
 
-# --------------------- Config ---------------------
-def load_config(script_dir):
-    cfg_path = script_dir / "android_build_config.json"
-    if not cfg_path.exists():
-        cfg_path.write_text(json.dumps(DEFAULT_CONFIG, indent=2, ensure_ascii=False) + "\n")
-        fail(f"Создан шаблон конфига: {cfg_path}. Отредактируй и запусти снова.")
-    try:
-        user_cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        fail(f"Ошибка в JSON {cfg_path}: {e}")
-    return merge_dicts(DEFAULT_CONFIG, user_cfg)
+    return apks[0]
 
-def resolve_config(cfg, script_dir, build_type_override):
-    cfg = dict(cfg)
-    bt = (build_type_override or cfg.get("build_type", "debug")).lower()
-    if bt not in ("debug", "release"):
-        fail('build_type должен быть "debug" или "release"')
-    cfg["build_type"] = bt
-    src = Path(cfg.get("source_dir", "."))
-    cfg["source_dir"] = str((script_dir / src).resolve() if not src.is_absolute() else src)
-    bdir_key = f"build_dir_{bt}"
-    bdir = Path(cfg.get(bdir_key, ""))
-    if not str(bdir):
-        fail(f"Не задан {bdir_key} в конфиге")
-    cfg["build_dir"] = str((script_dir / bdir).resolve() if not bdir.is_absolute() else bdir)
-    return cfg
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Build Qt Android APK via CMake + auto-sign")
-    parser.add_argument("--debug", action="store_true")
-    parser.add_argument("--release", action="store_true")
-    parser.add_argument("--build-type", choices=["debug", "release"])
-    parser.add_argument("--reconfigure", action="store_true")
-    parser.add_argument("--install", action="store_true")
-    parser.add_argument("--target", help="CMake target for APK build")
-    parser.add_argument("--no-sign", action="store_true")
-    return parser.parse_args()
-
-# --------------------- Build Steps ---------------------
-def cmake_configure(build_dir, source_dir, cfg):
-    """Configure CMake if not already configured."""
-    if (build_dir / "CMakeCache.txt").exists():
+def install_apk(apk: Path):
+    if not shutil.which("adb"):
+        print(f"⚠️ adb не найден. Установи вручную:\n"
+              f"   adb install -r '{apk}'")
         return
-    print(f"🛠  Configure CMake: {build_dir}")
-    build_dir.mkdir(parents=True, exist_ok=True)
-    build_type = cfg["build_type"]
-    defines = dict(cfg.get("cmake_defines_common", {}))
-    defines.update(cfg.get(f"cmake_defines_{build_type}", {}))
-    defines["CMAKE_BUILD_TYPE"] = build_type.capitalize()
-    d_args = [f"-D{k}={v}" for k, v in defines.items()]
-    run(["cmake", "-S", source_dir, "-B", str(build_dir), *d_args], check=True)
 
-def cmake_build(build_dir):
-    """Build the project."""
-    print("🔨 Сборка проекта...")
-    run(["cmake", "--build", str(build_dir), "--parallel"], check=True)
+    result = subprocess.run(
+        ["adb", "devices"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
 
-def cmake_build_apk(build_dir, apk_target):
-    """Build APK via CMake target."""
-    if not apk_target:
-        fail("Укажи --target для сборки APK")
-    print(f"📦 Создаём APK: {apk_target}")
-    run(["cmake", "--build", str(build_dir), "--target", apk_target, "--parallel"], check=True)
+    device_found = any(
+        line.endswith("\tdevice")
+        for line in result.stdout.splitlines()
+    )
 
-def maybe_reconfigure(build_dir, reconfigure):
-    """Delete CMakeCache if reconfigure requested."""
-    if reconfigure:
-        cache = build_dir / "CMakeCache.txt"
-        if cache.exists():
-            print(f"♻️  Удаляем {cache}")
-            cache.unlink()
-
-def get_keystore_params(cfg):
-    """Get keystore params from env or config, prompting if missing."""
-    ks_path = os.environ.get("ANDROID_KEYSTORE_PATH") or cfg.get("keystore_path", "").strip()
-    ks_alias = os.environ.get("ANDROID_KEYSTORE_ALIAS") or cfg.get("keystore_alias", "").strip()
-    storepass = os.environ.get("ANDROID_KEYSTORE_STOREPASS") or cfg.get("keystore_storepass", "").strip() or None
-    keypass = os.environ.get("ANDROID_KEYSTORE_KEYPASS") or cfg.get("keystore_keypass", "").strip() or None
-
-    if not ks_path:
-        fail("Не задан ANDROID_KEYSTORE_PATH")
-    if not ks_alias:
-        fail("Не задан ANDROID_KEYSTORE_ALIAS")
-    if not storepass:
-        storepass = getpass.getpass("Keystore password: ")
-    if not keypass:
-        keypass = getpass.getpass("Key password [Enter = same]: ") or storepass
-
-    return ks_path, ks_alias, storepass, keypass
-
-def maybe_sign_apk(apk, build_type, cfg, no_sign):
-    """Sign APK if release + unsigned + auto-sign enabled."""
-    if not (build_type == "release" and not no_sign and cfg.get("auto_sign_release", True)):
-        return apk
-    if "unsigned" not in apk.name.lower():
-        return apk
-
-    sdk_root = os.environ.get("ANDROID_SDK_ROOT", "")
-    if not sdk_root:
-        fail("ANDROID_SDK_ROOT не задан")
-
-    apksigner = find_apksigner(sdk_root, cfg.get("apksigner_path", ""))
-    ks_path, ks_alias, storepass, keypass = get_keystore_params(cfg)
-
-    signed_apk = apk.parent / apk.name.replace("-unsigned", "-signed")
-    sign_apk(apksigner, apk, signed_apk, ks_path, ks_alias, storepass, keypass)
-
-    if not signed_apk.exists():
-        fail(f"Подписанный APK не найден: {signed_apk}")
-
-    print(f"✅ SIGNED APK: {signed_apk}")
-    return signed_apk
-
-def maybe_install_apk(apk, do_install):
-    """Install APK via adb if requested."""
-    if not do_install:
+    if not device_found:
+        print(f"⚠️ Устройство не найдено. Установи вручную:\n"
+              f"   adb install -r '{apk}'")
         return
-    if not has_adb_device():
-        print(f"⚠️ adb не видит устройство. Установи вручную:\n   adb install -r '{apk}'")
-        return
-    print("📲 Устанавливаем APK...")
-    run(["adb", "install", "-r", str(apk)], check=True)
-    print("✅ Готово")
 
-# --------------------- Main ---------------------
+    run(["adb", "install", "-r", apk])
+
+
 def main():
-    args = parse_args()
-    script_dir = Path(__file__).resolve().parent
+    parser = argparse.ArgumentParser(description="Build Qt Android APK")
 
-    bt_override = args.build_type or ("debug" if args.debug else "release" if args.release else None)
-    cfg = resolve_config(load_config(script_dir), script_dir, bt_override)
+    parser.add_argument(
+        "--build-type",
+        choices=["debug", "release"],
+    )
+    parser.add_argument(
+        "--target",
+        required=True,
+        help="CMake target для APK",
+    )
+    parser.add_argument(
+        "--reconfigure",
+        action="store_true",
+        help="Удалить старый CMake build и сконфигурировать заново",
+    )
+    parser.add_argument(
+        "--install",
+        action="store_true",
+        help="Установить APK через adb",
+    )
 
-    build_type = cfg["build_type"]
-    build_dir = Path(cfg["build_dir"])
-    do_install = args.install or cfg.get("install", False)
+    args = parser.parse_args()
 
-    maybe_reconfigure(build_dir, args.reconfigure)
-    cmake_configure(build_dir, ".", cfg)
-    cmake_build(build_dir)
-    cmake_build_apk(build_dir, args.target)
+    root = Path(__file__).resolve().parent
+    cfg = load_config(root)
 
-    apk = find_apk(build_dir, build_type)
-    if not apk:
-        fail(f"APK не найден в {build_dir}")
-    print(f"✅ APK: {apk}")
+    if args.build_type:
+        cfg["build_type"] = args.build_type
 
-    final_apk = maybe_sign_apk(apk, build_type, cfg, args.no_sign)
-    maybe_install_apk(final_apk, do_install)
+    source, build, build_type = resolve_paths(root, cfg)
+
+    if args.reconfigure and build.exists():
+        print(f"♻️ Удаляем {build}")
+        shutil.rmtree(build)
+
+    need_configure = not (build / "CMakeCache.txt").exists()
+
+    if need_configure:
+        print("🔧 Первый запуск: устанавливаем Conan dependencies...")
+        conan_install(source, build, cfg, build_type)
+
+        print("🔧 Конфигурируем CMake...")
+        cmake_configure(source, build, cfg, build_type)
+    else:
+        print("♻️ Используем существующий CMake/Conan build")
+    run([
+        "cmake",
+        "--build",
+        build,
+        "--target",
+        args.target,
+        "--parallel",
+    ])
+    package_apk(build, cfg)
+    apk = find_apk(build, build_type)
+
+    print(f"\n✅ APK: {apk}")
+
+    if args.install or cfg.get("install", False):
+        install_apk(apk)
+
 
 if __name__ == "__main__":
-    try:
-        main()
-    except subprocess.CalledProcessError as e:
-        fail(f"Команда завершилась с ошибкой (код {e.returncode})", e.returncode)
-    except KeyboardInterrupt:
-        fail("Прервано пользователем", 130)
+    main()

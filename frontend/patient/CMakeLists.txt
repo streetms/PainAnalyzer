@@ -1,13 +1,14 @@
 project(patient)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 set(CMAKE_ANDROID_ARCH_ABI arm64-v8a)
 
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+
 find_package(Qt6 REQUIRED COMPONENTS
         Quick
         QuickControls2
@@ -15,6 +16,8 @@ find_package(Qt6 REQUIRED COMPONENTS
         Network
         Qml
 )
+
+find_package(OpenSSL REQUIRED)
 
 set(SRC
         src/main.cpp
@@ -42,12 +45,18 @@ set(HEADERS
 )
 
 set(QT_ANDROID_DEPLOYMENT_TYPE Minimal)
-## Создаём Qt-приложение
-qt_add_executable(patient ${SRC} ${HEADERS}  resource.qrc)
+
+qt_add_executable(patient
+        ${SRC}
+        ${HEADERS}
+        resource.qrc
+)
+
 qt_add_qml_module(patient
         URI Patient
         VERSION 1.0
         RESOURCE_PREFIX /qt/qml
+
         QML_FILES
         qml/core/App.qml
         qml/AutorizationForms/FIO.qml
@@ -71,18 +80,79 @@ qt_add_qml_module(patient
         qml/History/HistoryListView.qml
         qml/Record/TimeDialog.qml
 )
+
+if(ANDROID)
+
+    set_target_properties(patient PROPERTIES
+            QT_ANDROID_PACKAGE_SOURCE_DIR
+            "${CMAKE_CURRENT_SOURCE_DIR}/android"
+    )
+
+    get_target_property(
+            CORE_ANDROID_OPENSSL_DIR
+            core
+            PAINANALYZER_ANDROID_OPENSSL_DIR
+    )
+
+    if(NOT CORE_ANDROID_OPENSSL_DIR)
+        message(FATAL_ERROR
+                "Could not obtain Android OpenSSL staging directory from core"
+        )
+    endif()
+
+    set(OPENSSL_ANDROID_SSL
+            "${CORE_ANDROID_OPENSSL_DIR}/libssl.so"
+    )
+
+    set(OPENSSL_ANDROID_CRYPTO
+            "${CORE_ANDROID_OPENSSL_DIR}/libcrypto.so"
+    )
+
+    message(STATUS
+            "Patient Android OpenSSL directory: ${CORE_ANDROID_OPENSSL_DIR}"
+    )
+
+    message(STATUS
+            "Patient Android OpenSSL SSL: ${OPENSSL_ANDROID_SSL}"
+    )
+
+    message(STATUS
+            "Patient Android OpenSSL Crypto: ${OPENSSL_ANDROID_CRYPTO}"
+    )
+
+    if(NOT EXISTS "${OPENSSL_ANDROID_SSL}")
+        message(FATAL_ERROR
+                "Android OpenSSL SSL staging file does not exist:\n"
+                "${OPENSSL_ANDROID_SSL}"
+        )
+    endif()
+
+    if(NOT EXISTS "${OPENSSL_ANDROID_CRYPTO}")
+        message(FATAL_ERROR
+                "Android OpenSSL Crypto staging file does not exist:\n"
+                "${OPENSSL_ANDROID_CRYPTO}"
+        )
+    endif()
+
+    set_target_properties(patient PROPERTIES
+            QT_ANDROID_EXTRA_LIBS
+            "${OPENSSL_ANDROID_SSL};${OPENSSL_ANDROID_CRYPTO}"
+    )
+
+endif()
+
 set_target_properties(patient PROPERTIES
-        QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
-)
-set_target_properties(patient PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY
+        "${CMAKE_CURRENT_BINARY_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}"
+
         QT_QMLCACHEGEN TRUE
 )
 
-# Подключаем core как библиотеку
 target_link_libraries(patient
         PRIVATE
         core
         shared_ui
+
         Qt6::Quick
         Qt6::Quick3D
         Qt6::Core
@@ -90,19 +160,11 @@ target_link_libraries(patient
         Qt6::Qml
         Qt6::QuickControls2
         Qt6::Network
+
         nlohmann_json::nlohmann_json
 )
-if(ANDROID)
-    if(ANDROID)
-        get_filename_component(OPENSSL_ROOT "${OPENSSL_INCLUDE_DIR}" DIRECTORY)
 
-        set_property(TARGET patient APPEND PROPERTY
-                QT_ANDROID_EXTRA_LIBS
-                "${OPENSSL_ROOT}/lib/libssl.so"
-                "${OPENSSL_ROOT}/lib/libcrypto.so"
-        )
-    endif()
-endif()
-target_include_directories(patient PRIVATE
+target_include_directories(patient
+        PRIVATE
         include
 )
