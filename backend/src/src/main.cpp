@@ -1,8 +1,8 @@
 #include <iostream>
 #include <stacktrace>
-#include "../include/modules/auth/AuthService.h"
-#include "infrastructure/http/Router.h"
-#include "infrastructure/http/Server.h"
+#include <cpphttp/router.hpp>
+#include <cpphttp/server.hpp>
+#include <cpphttp/server_config.hpp>
 #include "app/AppContext.h"
 #include "infrastructure/http/routes/RegisterRoutes.h"
 #include "utils/load_dotenv.h"
@@ -12,7 +12,7 @@ void my_terminate_handler()
     std::cerr << std::stacktrace::current() << std::endl;
     std::_Exit(1);
 }
-void router_setup(Router& router, AppContext& ctx) {
+void router_setup(cpphttp::Router& router, AppContext& ctx) {
     routes::registerAuthRoutes(router,ctx.authHandler);
     routes::registerPainEpisodeRoutes(router,ctx.painEpisodeHandler);
 }
@@ -26,14 +26,14 @@ int main()
 
         auto ctx = std::make_shared<AppContext>(ioc, 10, 4);
 
-        auto router = std::make_shared<Router>();
-        router_setup(*router, *ctx);
+        cpphttp::Router router;
+        router_setup(router, *ctx);
 
-        std::make_shared<Server>(
-        ioc,
-        tcp::endpoint(tcp::v4(), 5555),
-        router
-        )->run();
+        cpphttp::ServerConfig server_config;
+        server_config.address = "0.0.0.0";
+        server_config.port = 5555;
+        cpphttp::Server server(ioc.get_executor(), std::move(router), server_config);
+        server.start();
 
         std::cout << "Server started on port 5555\n";
         std::vector<std::thread> threads;
@@ -50,6 +50,7 @@ int main()
                 }
             });
         }
+
 
         for (auto& t : threads) {
             t.join();

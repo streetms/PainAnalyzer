@@ -1,18 +1,22 @@
 #pragma once
-#include <functional>
-#include <string>
-#include <unordered_map>
-#include "utils/alias.h"
 
+#include <cpphttp/handler.hpp>
+
+#include <string>
+#include <string_view>
+#include <unordered_map>
+
+namespace cpphttp {
 
 class Router {
 public:
-    using handler_t  = std::function<
-    net::awaitable<Response>(Request)>;
+    using handler_t = Handler;
 
     void add(const std::string& path, handler_t handler);
+    handler_t get(std::string_view path) const;
 
-    handler_t get(const std::string& path);
 private:
     std::unordered_map<std::string, handler_t> routes_;
 };
+
+}

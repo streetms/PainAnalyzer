@@ -11,16 +11,10 @@ find_package(libpqxx REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(jwt-cpp CONFIG REQUIRED)
 set(SRC
-        src/infrastructure/http/Server.cpp
         src/modules/auth/AuthService.cpp
-        src/infrastructure/http/Session.cpp
-        src/infrastructure/http/Router.cpp
         src/modules/auth/AuthHandlers.cpp
-        include/infrastructure/http/Server.h
         include/infrastructure/database/Database.h
         include/modules/auth/AuthService.h
-        include/infrastructure/http/Session.h
-        include/infrastructure/http/Router.h
         include/modules/auth/AuthHandlers.h
         include/infrastructure/database/ConnectionPool.h
         src/infrastructure/database/ConnectionPool.cpp
@@ -44,7 +38,7 @@ add_library(server_core
         ${SRC}
 )
 
-target_link_libraries(server_core pqxx pq)
+target_link_libraries(server_core pqxx pq cpphttp::cpphttp)
 target_link_libraries(server_core
         Boost::url
         libpqxx::pqxx
