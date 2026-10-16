@@ -32,6 +32,10 @@ if(BUILD_TESTING)
     target_link_libraries(cpphttp_tests PRIVATE cpphttp)
     add_test(NAME cpphttp_tests COMMAND cpphttp_tests)
 
+    add_executable(cpphttp_request_response_tests tests/request_response_tests.cpp)
+    target_link_libraries(cpphttp_request_response_tests PRIVATE cpphttp)
+    add_test(NAME cpphttp_request_response_tests COMMAND cpphttp_request_response_tests)
+
     add_executable(cpphttp_server_tests tests/server_integration_tests.cpp)
     target_link_libraries(cpphttp_server_tests PRIVATE cpphttp)
     add_test(NAME cpphttp_server_tests COMMAND cpphttp_server_tests)
