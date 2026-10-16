@@ -77,13 +77,12 @@ if(ANDROID)
     )
 
     set(OPENSSL_ANDROID_SSL
-            "${OPENSSL_ANDROID_STAGING}/libssl.so"
+            "${OPENSSL_ANDROID_STAGING}/libssl_3.so"
     )
 
     set(OPENSSL_ANDROID_CRYPTO
-            "${OPENSSL_ANDROID_STAGING}/libcrypto.so"
+            "${OPENSSL_ANDROID_STAGING}/libcrypto_3.so"
     )
-
     message(STATUS
             "Android OpenSSL directory: ${OPENSSL_ANDROID_LIB_DIR}"
     )
@@ -132,34 +131,25 @@ if(ANDROID)
     )
 
     execute_process(
-            COMMAND
-            "${PATCHELF_EXECUTABLE}"
-            --set-soname
-            libssl.so
+            COMMAND "${PATCHELF_EXECUTABLE}"
+            --set-soname libssl_3.so
             "${OPENSSL_ANDROID_SSL}"
             RESULT_VARIABLE PATCHELF_SSL_RESULT
     )
 
     if(NOT PATCHELF_SSL_RESULT EQUAL 0)
-        message(FATAL_ERROR
-                "Failed to patch Android libssl.so"
-        )
+        message(FATAL_ERROR "Failed to patch Android libssl_3.so")
     endif()
 
     execute_process(
-            COMMAND
-            "${PATCHELF_EXECUTABLE}"
-            --replace-needed
-            libcrypto.so.3
-            libcrypto.so
+            COMMAND "${PATCHELF_EXECUTABLE}"
+            --replace-needed libcrypto.so.3 libcrypto_3.so
             "${OPENSSL_ANDROID_SSL}"
             RESULT_VARIABLE PATCHELF_SSL_CRYPTO_RESULT
     )
 
     if(NOT PATCHELF_SSL_CRYPTO_RESULT EQUAL 0)
-        message(FATAL_ERROR
-                "Failed to patch libssl.so dependency on libcrypto.so"
-        )
+        message(FATAL_ERROR "Failed to patch libssl_3.so dependency on libcrypto_3.so")
     endif()
 
     if(NOT PATCHELF_SSL_RESULT EQUAL 0)
@@ -169,19 +159,14 @@ if(ANDROID)
     endif()
 
     execute_process(
-            COMMAND
-            "${PATCHELF_EXECUTABLE}"
-            --set-soname
-            libcrypto.so
+            COMMAND "${PATCHELF_EXECUTABLE}"
+            --set-soname libcrypto_3.so
             "${OPENSSL_ANDROID_CRYPTO}"
-
             RESULT_VARIABLE PATCHELF_CRYPTO_RESULT
     )
 
     if(NOT PATCHELF_CRYPTO_RESULT EQUAL 0)
-        message(FATAL_ERROR
-                "Failed to patch Android libcrypto.so"
-        )
+        message(FATAL_ERROR "Failed to patch Android libcrypto_3.so")
     endif()
 
 
@@ -194,22 +179,15 @@ if(ANDROID)
             TARGET core
             POST_BUILD
 
-            COMMAND
-            "${PATCHELF_EXECUTABLE}"
-            --replace-needed
-            libssl.so.3
-            libssl.so
+            COMMAND "${PATCHELF_EXECUTABLE}"
+            --replace-needed libssl.so.3 libssl_3.so
             "$<TARGET_FILE:core>"
 
-            COMMAND
-            "${PATCHELF_EXECUTABLE}"
-            --replace-needed
-            libcrypto.so.3
-            libcrypto.so
+            COMMAND "${PATCHELF_EXECUTABLE}"
+            --replace-needed libcrypto.so.3 libcrypto_3.so
             "$<TARGET_FILE:core>"
 
-            COMMENT
-            "Fixing Android libcore OpenSSL dependencies"
+            COMMENT "Fixing Android libcore OpenSSL dependencies"
     )
 endif()
 

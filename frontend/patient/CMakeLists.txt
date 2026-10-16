@@ -101,13 +101,12 @@ if(ANDROID)
     endif()
 
     set(OPENSSL_ANDROID_SSL
-            "${CORE_ANDROID_OPENSSL_DIR}/libssl.so"
+            "${CORE_ANDROID_OPENSSL_DIR}/libssl_3.so"
     )
 
     set(OPENSSL_ANDROID_CRYPTO
-            "${CORE_ANDROID_OPENSSL_DIR}/libcrypto.so"
+            "${CORE_ANDROID_OPENSSL_DIR}/libcrypto_3.so"
     )
-
     message(STATUS
             "Patient Android OpenSSL directory: ${CORE_ANDROID_OPENSSL_DIR}"
     )
