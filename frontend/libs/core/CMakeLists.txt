@@ -15,16 +15,10 @@ find_package(OpenSSL REQUIRED)
 
 set(CORE_SOURCES
         src/infrastructure/network/ApiClient.cpp
-        src/application/AuthService.cpp
 )
 
 set(CORE_HEADERS
         include/core/infrastructure/network/ApiClient.h
-        include/core/application/AuthService.h
-        src/infrastructure/AuthRepository.cpp
-        include/core/infrastructure/AuthRepository.h
-        src/presentation/AuthManager.cpp
-        include/core/presentation/AuthManager.h
         include/core/presentation/UiExecutor.h
 )
 
