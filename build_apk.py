@@ -10,6 +10,46 @@ def run(cmd, **kwargs):
     print("\n$", " ".join(map(str, cmd)))
     subprocess.run([str(x) for x in cmd], check=True, **kwargs)
 
+def create_pure_config(path):
+    with open(path, 'w') as file:
+        file.write(
+    """
+{
+  "source_dir": ".",
+  "project_name": "PainAnalyzer",
+
+  "build_type": "debug",
+
+  "build_dir_debug": "build/cmake-build-debug-android",
+  "build_dir_release": "build/cmake-build-release-android",
+
+  "install": false,
+
+  "cmake_defines_common": {
+    "CONAN_PROFILE": "conan_profiles/android-arm64",
+    "CONAN_CMD": "",
+
+    "QT_HOST_PATH": "",
+    "ANDROID_SDK_ROOT": "",
+    "ANDROID_NDK_ROOT": "",
+
+    "ANDROID_ABI": "arm64-v8a",
+
+    "CMAKE_PREFIX_PATH": "",
+
+    "QT_ANDROID_MIN_SDK_VERSION": "26",
+    "QT_ANDROID_BUILD_TOOLS_REVISION": "35.0.0",
+
+    "BUILD_FRONTEND": "ON",
+    "BUILD_BACKEND": "OFF"
+  },
+
+  "cmake_defines_debug": {},
+  "cmake_defines_release": {}
+}
+"""
+        )
+
 
 def check_config(config : dict):
     for key,value in config.items():
@@ -22,6 +62,10 @@ def check_config(config : dict):
     return config
 def load_config(root: Path) -> dict:
     path = root / "android_build_config.json"
+    if not os.path.exists(path):
+       create_pure_config(path)
+       print("создан чистый конфиг для андроид сборки\nнеобходимо вставить туда локальные пути")
+       exit(0)
     with (path).open(encoding="utf-8") as f:
         config = json.load(f)
         return check_config(config)

@@ -1,0 +1,52 @@
+
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "linux-debug",
+      "displayName": "Linux Debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/preset-linux-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CONAN_CMD": "",
+        "CONAN_PROFILE": "${sourceDir}/conan_profiles/linux-gcc15",
+        "CMAKE_PREFIX_PATH": "",
+        "Qt6_DIR": "",
+        "BUILD_FRONTEND": "ON",
+        "BUILD_BACKEND": "OFF"
+      }
+    },
+    {
+      "name": "linux-server",
+      "displayName": "Linux Server Debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/preset-linux-server",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CONAN_CMD": "",
+        "CONAN_PROFILE": "${sourceDir}/conan_profiles/linux-gcc15",
+        "CMAKE_PREFIX_PATH": "",
+        "Qt6_DIR": "",
+        "BUILD_FRONTEND": "OFF",
+        "BUILD_BACKEND": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-debug",
+      "configurePreset": "linux-debug",
+      "targets": ["patient"]
+    },
+    {
+      "name": "linux-server",
+      "configurePreset": "linux-server"
+    }
+  ]
+}
