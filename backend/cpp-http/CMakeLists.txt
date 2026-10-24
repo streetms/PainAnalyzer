@@ -11,8 +11,6 @@ add_library(cpphttp
     src/session.cpp
     src/server.cpp
 )
-add_library(cpphttp::cpphttp ALIAS cpphttp)
-
 target_compile_features(cpphttp PUBLIC cxx_std_20)
 target_include_directories(cpphttp
     PUBLIC

@@ -34,7 +34,7 @@ add_library(server_core
         ${SRC}
 )
 
-target_link_libraries(server_core cpppg cpphttp::cpphttp)
+target_link_libraries(server_core cpppg cpphttp)
 target_link_libraries(server_core
         Boost::url
         nlohmann_json::nlohmann_json
