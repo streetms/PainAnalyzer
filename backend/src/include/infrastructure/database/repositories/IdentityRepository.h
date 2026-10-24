@@ -4,7 +4,10 @@
 
 #ifndef PAINAPP_IDENTITIYREPOSITORY_H
 #define PAINAPP_IDENTITIYREPOSITORY_H
-#include "infrastructure/database/Database.h"
+#include <pqxx/pqxx>
+
+#include <cstdint>
+#include <string_view>
 
 class IdentityRepository {
 

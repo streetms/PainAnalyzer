@@ -4,7 +4,7 @@
 #include <string>
 #include "infrastructure/database/repositories/IdentityRepository.h"
 #include "infrastructure/database/repositories/TokenRepository.h"
-#include "infrastructure/database/Database.h"
+#include "cpppg/Database.h"
 namespace net = boost::asio;
 
 class AuthService

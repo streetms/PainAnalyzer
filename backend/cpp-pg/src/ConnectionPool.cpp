@@ -1,7 +1,4 @@
-#include "infrastructure/database/ConnectionPool.h"
-#include "infrastructure/database/repositories/IdentityRepository.h"
-#include "infrastructure/database/repositories/TokenRepository.h"
-#include "modules/pain/PainEpisodeRepository.h"
+#include <cpppg/ConnectionPool.h>
 namespace db {
     ConnectionGuard::ConnectionGuard(ConnectionGuard &&other) noexcept
             : conn_(other.conn_), pool_(other.pool_) {
@@ -34,12 +31,15 @@ namespace db {
         }
     }
 
-    ConnectionPool::ConnectionPool(std::string conninfo, size_t size) {
+    ConnectionPool::ConnectionPool(std::string_view conn_info, size_t size,
+                                   ConnectionInitializer initialize_connection) {
         for (size_t i = 0; i < size; ++i) {
             connections_.emplace_back(
-                std::make_unique<pqxx::connection>(conninfo)
+                std::make_unique<pqxx::connection>(conn_info.data())
             );
-            prepareStatements(connections_.back().get());
+            if (initialize_connection) {
+                initialize_connection(*connections_.back());
+            }
             idle_.push(connections_.back().get());
         }
     }
@@ -59,13 +59,5 @@ namespace db {
         std::lock_guard lock(mutex_);
         idle_.push(conn);
         cv_.notify_one();
-    }
-
-    void ConnectionPool::prepareStatements(pqxx::connection *conn) {
-        IdentityRepository::prepare(conn);
-        TokenRepository::prepare(conn);
-        PainEpisodeRepository::prepare(conn);
-        // conn->prepare("create_auth_token",     sql::auth::create_auth_token);
-        // conn->prepare("create_user_identities", sql::auth::create_user_identities);
     }
 }

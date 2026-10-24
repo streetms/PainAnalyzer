@@ -1,8 +1,11 @@
 #pragma once
 #include <condition_variable>
+#include <functional>
+#include <memory>
 #include <mutex>
 #include <queue>
-#include <thread>
+#include <string>
+#include <vector>
 #include <pqxx/pqxx>
 
 namespace db {
@@ -33,14 +36,15 @@ namespace db {
     };
     class ConnectionPool {
     public:
-        ConnectionPool(std::string conninfo, size_t size);
+        using ConnectionInitializer = std::function<void(pqxx::connection&)>;
+
+        ConnectionPool(std::string_view conn_info, size_t size,
+                       ConnectionInitializer initialize_connection = {});
 
         ConnectionGuard acquire();
 
     private:
         void release(pqxx::connection* conn);
-        void prepareStatements(pqxx::connection* conn);
-    private:
         std::vector<std::unique_ptr<pqxx::connection>> connections_;
         std::queue<pqxx::connection*> idle_;
 

@@ -1,8 +1,17 @@
 #pragma once
-#include "infrastructure/database/ConnectionPool.h"
-#include "utils/alias.h"
-#include <type_traits>
+#include "ConnectionPool.h"
 
+#include <boost/asio/co_spawn.hpp>
+#include <boost/asio/thread_pool.hpp>
+#include <boost/asio/use_awaitable.hpp>
+#include <boost/asio/awaitable.hpp>
+#include <pqxx/pqxx>
+
+#include <type_traits>
+#include <utility>
+
+namespace net = boost::asio;
+using ulid = std::string;
 namespace db {
     class Database {
     public:
@@ -12,7 +21,6 @@ namespace db {
         template<typename Func>
         auto run(Func fn) -> net::awaitable<std::invoke_result_t<Func, pqxx::work&>>
         {
-            // std::invoke_result_t — более чистая альтернатива decltype(std::declval...)
             using Result = std::invoke_result_t<Func, pqxx::work&>;
             co_return co_await net::co_spawn(
                 pool_,
@@ -30,7 +38,7 @@ namespace db {
                         co_return res;
                     }
             },
-                net::use_awaitable // <-- Главный секрет избавления от future
+                net::use_awaitable
             );
         }
 

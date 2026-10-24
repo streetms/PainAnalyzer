@@ -4,9 +4,11 @@
 
 #ifndef PAINAPP_PAINEPISODESERVICE_H
 #define PAINAPP_PAINEPISODESERVICE_H
-#include "infrastructure/database/Database.h"
-#include "PainEpisodeRepository.h"
+#include "cpppg/Database.h"
+#include "modules/pain/PainEpisodeRepository.h"
 #include "models/PainEpisode.h"
+
+#include <string>
 
 class PainEpisodeService {
     db::Database& db_;

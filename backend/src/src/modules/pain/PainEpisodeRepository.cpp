@@ -3,8 +3,7 @@
 //
 
 #include "modules/pain/PainEpisodeRepository.h"
-
-#include <iostream>
+#include <cpppg/Database.h>
 
 namespace {
     constexpr auto INSERT_PAIN_EPISODE = R"SQL(
