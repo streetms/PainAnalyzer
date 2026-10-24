@@ -15,8 +15,9 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CONAN_CMD": "",
-        "CONAN_PROFILE": "${sourceDir}/conan_profiles/linux-gcc15",
+        "CONAN_PROFILE": "${sourceDir}/conan_profiles/linux-gcc16",
         "CMAKE_PREFIX_PATH": "",
+        "CMAKE_CXX_COMPILER": "",
         "Qt6_DIR": "",
         "BUILD_FRONTEND": "ON",
         "BUILD_BACKEND": "OFF"
@@ -30,7 +31,8 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CONAN_CMD": "",
-        "CONAN_PROFILE": "${sourceDir}/conan_profiles/linux-gcc15",
+        "CMAKE_CXX_COMPILER": "",
+        "CONAN_PROFILE": "${sourceDir}/conan_profiles/linux-gcc16",
         "CMAKE_PREFIX_PATH": "",
         "Qt6_DIR": "",
         "BUILD_FRONTEND": "OFF",
