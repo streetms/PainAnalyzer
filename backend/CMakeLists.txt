@@ -3,9 +3,15 @@ project(PainAnalyzerServer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# Независимая HTTP-библиотека. Пока старый HTTP-слой приложения остаётся
-# на месте; подключаем библиотеку отдельной целью для поэтапной миграции.
-add_subdirectory(cpp-http)
+include(FetchContent)
+FetchContent_Declare(
+        cpp-http
+        GIT_REPOSITORY https://github.com/streetms/cpp-http.git
+        GIT_TAG main
+)
+
+FetchContent_MakeAvailable(cpp-http)
+
 add_subdirectory(cpp-pg)
 
 # Основная библиотека (вся бизнес-логика, DAL и т.д.)
