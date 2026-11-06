@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Boost REQUIRED COMPONENTS url)
 find_package(nlohmann_json REQUIRED)
 find_package(jwt-cpp CONFIG REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GSSAPI REQUIRED IMPORTED_TARGET krb5-gssapi)
+
 set(SRC
         src/modules/auth/AuthService.cpp
         src/modules/auth/AuthHandlers.cpp
@@ -34,6 +37,9 @@ add_library(server_core
         ${SRC}
 )
 
+target_link_libraries(server_core
+        PkgConfig::GSSAPI
+)
 target_link_libraries(server_core cpppg cpphttp)
 target_link_libraries(server_core
         Boost::url

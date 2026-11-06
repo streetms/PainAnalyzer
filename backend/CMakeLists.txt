@@ -11,9 +11,14 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(cpp-http)
+include(FetchContent)
+FetchContent_Declare(
+        cpp-pg
+        GIT_REPOSITORY https://github.com/streetms/cpp-pg.git
+        GIT_TAG main
+)
 
-add_subdirectory(cpp-pg)
-
+FetchContent_MakeAvailable(cpp-pg)
 # Основная библиотека (вся бизнес-логика, DAL и т.д.)
 add_subdirectory(src)
 #

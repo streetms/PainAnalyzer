@@ -4,7 +4,7 @@
 
 #ifndef PAINAPP_TOKENREPOSITORY_H
 #define PAINAPP_TOKENREPOSITORY_H
-#include "infrastructure/database/Database.h"
+#include <cpppg/Database.h>
 
 class TokenRepository {
 
