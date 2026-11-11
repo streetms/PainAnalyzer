@@ -14,7 +14,7 @@ public:
     AuthService(db::Database& db) : db_(db) {}
 
     std::string getTokenFromTarget(const std::string& target);
-    net::awaitable<void> insertMagicLinkToken(pqxx::bytes token_hash, std::string_view identity_type,std::string_view identifier);
+    net::awaitable<void> insertMagicLinkToken(db::Bytes token_hash, std::string_view identity_type,std::string_view identifier);
     net::awaitable<void> sendAuthLinkToEmail(std::string_view email,std::string_view token);
     net::awaitable<void> createUser(std::string_view hash, std::string_view type_id, std::string_view id);
 private:

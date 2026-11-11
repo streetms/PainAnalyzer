@@ -11,7 +11,7 @@ net::awaitable<Response> AuthHandler::registerUser(Request req) {
     std::string email = json["email"];
     auto token = Token<32>::generate();
     auto hash = TokenHash32::hash(token);
-    co_await auth_.insertMagicLinkToken(hash.to_pqxx(),"email",email);
+    co_await auth_.insertMagicLinkToken(hash.to_bytes(),"email",email);
     co_await auth_.sendAuthLinkToEmail(email,token.to_string());
     // co_await auth_.createUser(token,"email",email);
     Response res{http::status::ok, req.version()};

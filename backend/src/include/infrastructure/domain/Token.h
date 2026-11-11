@@ -8,7 +8,9 @@
 #include <string>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
-#include <pqxx/pqxx>
+#include <cpppg/Parameter.h>
+#include <openssl/evp.h>
+#include <stdexcept>
 
 template <size_t N>
 struct Token {
@@ -93,8 +95,8 @@ struct TokenHash {
         SHA256((t.bytes.data()), t.bytes.size(), (h.bytes.data()));
         return h;
     }
-    [[nodiscard]] pqxx::bytes to_pqxx ()const {
-        pqxx::bytes out(bytes.size());
+    [[nodiscard]] db::Bytes to_bytes ()const {
+        db::Bytes out(bytes.size());
         memcpy(out.data(), reinterpret_cast<const unsigned char* >(bytes.data()), bytes.size());
         return out;
     }

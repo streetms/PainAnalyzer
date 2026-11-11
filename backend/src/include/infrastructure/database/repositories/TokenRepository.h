@@ -4,19 +4,19 @@
 
 #ifndef PAINAPP_TOKENREPOSITORY_H
 #define PAINAPP_TOKENREPOSITORY_H
-#include <cpppg/Database.h>
-
+#include <cpppg/Transaction.h>
+#include <cpppg/Connection.h>
 class TokenRepository {
 
 public:
-    int64_t insertToken(pqxx::work& tx,pqxx::bytes token_hash, uint64_t ttl_seconds);
-    void insertMagicLink(pqxx::work& tx,int64_t token_id, int64_t identity_id, std::string_view token_type);
+    int64_t insertToken(db::Transaction& tx,db::Bytes token_hash, uint64_t ttl_seconds);
+    void insertMagicLink(db::Transaction& tx,int64_t token_id, int64_t identity_id, std::string_view token_type);
 
     struct Statements {
         static constexpr std::string_view InsertToken = "insert_token";
         static constexpr std::string_view InsertMagicLink = "Insert_magic_link";
     };
-    static void prepare(pqxx::connection* conn);
+    static void prepare(db::Connection& conn);
 };
 
 

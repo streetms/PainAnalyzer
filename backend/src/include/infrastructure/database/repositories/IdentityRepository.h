@@ -4,20 +4,22 @@
 
 #ifndef PAINAPP_IDENTITIYREPOSITORY_H
 #define PAINAPP_IDENTITIYREPOSITORY_H
-#include <pqxx/pqxx>
+#include <cpppg/Transaction.h>
 
 #include <cstdint>
 #include <string_view>
 
+#include <cpppg/Connection.h>
+
 class IdentityRepository {
 
 public:
-    int64_t insertIdentity(pqxx::work &tx, std::string_view identifier_type, std::string_view identifier) const;
+    int64_t insertIdentity(db::Transaction &tx, std::string_view identifier_type, std::string_view identifier) const;
     struct Statements {
         static constexpr std::string_view InsertIdentity = "insert_identity";
         static constexpr std::string_view AttachIdentity = "attach_identity";
     };
-    static void prepare(pqxx::connection* conn);
+    static void prepare(db::Connection& conn);
 };
 
 

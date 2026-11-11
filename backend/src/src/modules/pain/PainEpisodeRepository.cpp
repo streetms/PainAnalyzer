@@ -3,7 +3,7 @@
 //
 
 #include "modules/pain/PainEpisodeRepository.h"
-#include <cpppg/Database.h>
+#include <stdexcept>
 
 namespace {
     constexpr auto INSERT_PAIN_EPISODE = R"SQL(
@@ -45,7 +45,7 @@ ORDER BY pe.started_at
     )SQL";
 }
 void PainEpisodeRepository::attachFeatures(
-    pqxx::work& tx,
+    db::Transaction& tx,
     const ulid& episode_id,
     const std::vector<std::string>& features,
     std::string_view type)
@@ -53,51 +53,46 @@ void PainEpisodeRepository::attachFeatures(
     if (features.empty())
         return;
 
-    tx.exec_prepared(
-        Statements::attachFeatures.data(),
-        episode_id,
-        features,
-        type
-    );
+    const db::Parameter parameters[]{episode_id, features, std::string{type}};
+    tx.exec_prepared(Statements::attachFeatures, parameters);
 }
 
 
-ulid PainEpisodeRepository::insertPainEpisode(pqxx::work &tx, const ulid& patient_id, std::string_view started_at, int intensity) {
-    auto res = tx.exec_prepared(
-        Statements::insertPainEpisode.data(),
-        patient_id,
-        started_at,
-        intensity);
+ulid PainEpisodeRepository::insertPainEpisode(db::Transaction &tx, const ulid& patient_id, std::string_view started_at, int intensity) {
+    const db::Parameter parameters[]{
+        patient_id, std::string{started_at}, std::int64_t{intensity}
+    };
+    auto res = tx.exec_prepared(Statements::insertPainEpisode, parameters);
     if (res.size() != 1)
         throw std::runtime_error("insert pain episode failed");
-    ulid id = res[0]["id"].as<ulid>();
+    const auto value = res.get(0, "id");
+    ulid id{*value};
 
     return id;
 }
 
 
-std::vector<PainEpisode> PainEpisodeRepository::getPainEpisodes(pqxx::work &tx, const ulid& patient_id,std::string_view from_date, std::string_view to_date) {
-    auto res = tx.exec_prepared(Statements::getPainEpisodes.data(),
-    patient_id,
-    from_date,
-        to_date);
+std::vector<PainEpisode> PainEpisodeRepository::getPainEpisodes(db::Transaction &tx, const ulid& patient_id,std::string_view from_date, std::string_view to_date) {
+    const db::Parameter parameters[]{
+        patient_id, std::string{from_date}, std::string{to_date}
+    };
+    auto res = tx.exec_prepared(Statements::getPainEpisodes, parameters);
     std::vector<PainEpisode> episodes;
 
-    for (const auto& row : res) {
-        // 1. Берем готовую JSON строку из базы
-        std::string json_str = row["episode_json"].c_str();
-        PainEpisode ep = nlohmann::json::parse(json_str).get<PainEpisode>();
+    for (std::size_t row = 0; row < res.size(); ++row) {
+        const auto json = res.get(row, "episode_json");
+        PainEpisode ep = nlohmann::json::parse(*json).get<PainEpisode>();
         episodes.push_back(std::move(ep));
     }
     return episodes;
 }
 
-std::vector<PainEpisode> PainEpisodeRepository::getPainEpisodes(pqxx::work &tx, const ulid& patient_id,std::string_view date) {
+std::vector<PainEpisode> PainEpisodeRepository::getPainEpisodes(db::Transaction &tx, const ulid& patient_id,std::string_view date) {
     return getPainEpisodes(tx,patient_id,date,date);
 }
 
-void PainEpisodeRepository::prepare(pqxx::connection *conn) {
-    conn->prepare(Statements::insertPainEpisode,INSERT_PAIN_EPISODE);
-    conn->prepare(Statements::attachFeatures,ATTACH_FEATURES);
-    conn->prepare(Statements::getPainEpisodes,GET_PAIN_EPISODES);
+void PainEpisodeRepository::prepare(db::Connection& conn) {
+    conn.prepare(Statements::insertPainEpisode,INSERT_PAIN_EPISODE);
+    conn.prepare(Statements::attachFeatures,ATTACH_FEATURES);
+    conn.prepare(Statements::getPainEpisodes,GET_PAIN_EPISODES);
 }

@@ -8,7 +8,7 @@
 
 net::awaitable<void> PainEpisodeService::insertPainEpisode(const PainEpisode &episode) {
     try {
-        co_await db_.run([&](pqxx::work& tx) {
+        co_await db_.run([&](db::Transaction& tx) {
             std::string patient_id = "01KT97H6RJ74K2CNFHP7NPS1TA";
             auto episode_id = painEpisodeRepository.insertPainEpisode(tx,patient_id,episode.started_at,episode.intensity);
             painEpisodeRepository.attachFeatures(tx,episode_id,episode.types,"pain_type");
@@ -23,7 +23,7 @@ net::awaitable<void> PainEpisodeService::insertPainEpisode(const PainEpisode &ep
 }
 
 net::awaitable<std::vector<PainEpisode>> PainEpisodeService::getPainEpisodes(const ulid& patient_id,std::string_view from_date, std::string_view to_date) {
-    co_return co_await db_.run([&](pqxx::work& tx) {
+    co_return co_await db_.run([&](db::Transaction& tx) {
 
         auto res = painEpisodeRepository.getPainEpisodes(tx,patient_id,from_date,to_date);
         return res;

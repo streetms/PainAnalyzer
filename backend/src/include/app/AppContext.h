@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include "cpppg/ConnectionPool.h"
-#include "cpppg/Database.h"
+#include <cpppg/ConnectionPool.h>
+#include <cpppg/Database.h>
+#include <cpppg/Connection.h>
 #include "infrastructure/database/repositories/IdentityRepository.h"
 #include "infrastructure/database/repositories/TokenRepository.h"
 #include "modules/auth/AuthHandlers.h"
@@ -22,10 +23,10 @@ struct AppContext {
     authHandler(authService_),
     painEpisodeHandler(painEpisodeService_){}
 private:
-    static void prepareStatements(pqxx::connection& connection) {
-        IdentityRepository::prepare(&connection);
-        TokenRepository::prepare(&connection);
-        PainEpisodeRepository::prepare(&connection);
+    static void prepareStatements(db::Connection& connection) {
+        IdentityRepository::prepare(connection);
+        TokenRepository::prepare(connection);
+        PainEpisodeRepository::prepare(connection);
     }
 
     net::io_context& ioc_;

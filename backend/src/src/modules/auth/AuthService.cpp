@@ -29,10 +29,10 @@ std::string AuthService::getTokenFromTarget(const std::string &target) {
     return target.substr(pos + 6);
 }
 
-net::awaitable<void> AuthService::insertMagicLinkToken(pqxx::bytes token_hash, std::string_view identity_type,
+net::awaitable<void> AuthService::insertMagicLinkToken(db::Bytes token_hash, std::string_view identity_type,
     std::string_view identifier) {
     try {
-        co_await db_.run([&](pqxx::work& tx) {
+        co_await db_.run([&](db::Transaction& tx) {
             auto identity_id = identityRepository_.insertIdentity(tx,identity_type, identifier);
             std::chrono::seconds  ttl_seconds = std::chrono::minutes(15);
             auto token_id = tokenRepository_.insertToken(tx,token_hash, ttl_seconds.count() );
